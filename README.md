@@ -86,13 +86,13 @@ info: You can now open blinksocks-gui in browser:
 
 ```
 
-## 命令行启动
+### 命令行启动
 
 ```
 $ blinksocks-gui --client --port 3000
 ```
 
-> Tips: 第一次启动时，程序会自动创建一个 `root` 用户，初始密码为 `root`。在 `/landing` 页面输入初始密码后登录系统。
+> Tips: 第一次启动时，程序会自动创建一个 `root` 用户，初始密码为 `root`，在 `/landing` 页面输入初始密码后登录系统。
 
 ## 修改初始登录密码
 

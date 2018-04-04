@@ -1,8 +1,18 @@
 # blinksocks-gui
 
+[![version](https://img.shields.io/npm/v/blinksocks-gui.svg)](https://www.npmjs.com/package/blinksocks-gui)
+[![downloads](https://img.shields.io/npm/dt/blinksocks-gui.svg)](https://www.npmjs.com/package/blinksocks-gui)
+[![license](https://img.shields.io/npm/l/blinksocks-gui.svg)](https://github.com/blinksocks/blinksocks-gui/blob/master/LICENSE)
+[![dependencies](https://img.shields.io/david/blinksocks/blinksocks-gui.svg)](https://www.npmjs.com/package/blinksocks-gui)
+[![devDependencies](https://img.shields.io/david/dev/blinksocks/blinksocks-gui.svg)](https://www.npmjs.com/package/blinksocks-gui)
+
+[![%e2%9d%a4](https://img.shields.io/badge/made%20with-%e2%9d%a4-ff69b4.svg)](https://github.com/blinksocks/blinksocks-gui)
+
 为 [blinksocks](https://github.com/blinksocks/blinksocks) 封装的 WEB 图形化界面。
 
-![](screenshot.png)
+![](screenshot-0.png)
+
+![](screenshot-1.png)
 
 ## 在线体验（只读模式）
 

@@ -5,7 +5,7 @@ import { Button } from '@blueprintjs/core';
 
 import { call } from '../../../utils';
 
-export default class AddService extends React.Component {
+export default class Add extends React.Component {
 
   static propTypes = {
     match: PropTypes.object.isRequired,

@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import formatSize from 'filesize';
 import { Link } from 'react-router-dom';
 import { observer } from 'mobx-react';
-import { Icon, Switch, Popover, Menu, MenuItem, MenuDivider, Position } from '@blueprintjs/core';
+import { Dialog, Button, Icon, Switch, Popover, Menu, MenuItem, MenuDivider, Position } from '@blueprintjs/core';
 
 import styles from './Service.module.css';
 import { call, toast, store } from '../../../utils';
@@ -14,17 +14,25 @@ export default class Service extends React.Component {
 
   static propTypes = {
     service: PropTypes.object.isRequired,
-    onRemove: PropTypes.func,
     onCopy: PropTypes.func,
+    onRename: PropTypes.func,
+    onRemove: PropTypes.func,
   };
 
   static defaultProps = {
+    onCopy: () => {
+    },
+    onRename: () => {
+    },
     onRemove: () => {
     },
   };
 
   state = {
     pending: false,
+    currentRemarks: '',
+    isRenameDialogOpen: false,
+    isRenaming: false,
   };
 
   onToggle = async (e) => {
@@ -45,6 +53,21 @@ export default class Service extends React.Component {
     this.setState({ pending: false });
   };
 
+  onOpenRenameDialog = () => {
+    const { service } = this.props;
+    this.setState({ isRenameDialogOpen: true, currentRemarks: service.remarks });
+  };
+
+  onEditRemarks = async () => {
+    const { currentRemarks: remarks } = this.state;
+    if (remarks.length < 1) {
+      return;
+    }
+    this.setState({ isRenaming: true });
+    await this.props.onRename(remarks);
+    this.setState({ isRenaming: false, isRenameDialogOpen: false });
+  };
+
   renderMenu = () => {
     const { service: { id }, onRemove, onCopy } = this.props;
     const styles = { textDecoration: 'none', color: 'inherit' };
@@ -57,6 +80,7 @@ export default class Service extends React.Component {
           <MenuItem text="View Log" icon="eye-open"/>
         </Link>
         <MenuItem text="Copy" icon="duplicate" onClick={onCopy}/>
+        <MenuItem text="Rename" icon="text-highlight" onClick={this.onOpenRenameDialog}/>
         <MenuDivider/>
         <MenuItem
           text="Remove"
@@ -104,6 +128,45 @@ export default class Service extends React.Component {
     );
   };
 
+  renderRenameDialog = () => {
+    const { isRenameDialogOpen, isRenaming, currentRemarks } = this.state;
+    return (
+      <Dialog
+        isOpen={isRenameDialogOpen}
+        title="Rename"
+        onClose={() => this.setState({ isRenameDialogOpen: false })}
+      >
+        <div className="pt-dialog-body">
+          <label className="pt-label">
+            New Name
+            <span className="pt-text-muted">(required)</span>
+            <div className="pt-input-group">
+              <span className="pt-icon pt-icon-user"/>
+              <input
+                className="pt-input"
+                type="text"
+                dir="auto"
+                autoFocus
+                value={currentRemarks}
+                onChange={(e) => this.setState({ currentRemarks: e.target.value })}
+              />
+            </div>
+          </label>
+        </div>
+        <div className="pt-dialog-footer">
+          <div className="pt-dialog-footer-actions">
+            <Button
+              intent="primary"
+              loading={isRenaming}
+              onClick={this.onEditRemarks}
+              text="OK"
+            />
+          </div>
+        </div>
+      </Dialog>
+    );
+  };
+
   render() {
     const { id, protocol, address, remarks } = this.props.service;
     const { pending } = this.state;
@@ -128,6 +191,7 @@ export default class Service extends React.Component {
           <small className={styles.address}>{protocol}://{address}</small>
           {this.renderSummary()}
         </Link>
+        {this.renderRenameDialog()}
       </li>
     );
   }

@@ -1,49 +1,9 @@
 .container {
 
-  .title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    margin: 10px 0 20px 0;
-    background-color: #fafafa;
-    font-size: 1.5rem;
-    font-weight: 400;
-    color: #676767;
-    border: 1px solid #ececec;
-
-    .left {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      section {
-        display: flex;
-        flex-direction: column;
-        margin-left: 15px;
-
-        h3 {
-          margin: 0;
-          color: #5d5d5d;
-        }
-
-        p {
-          margin: 0;
-          color: #747474;
-          font-size: 16px;
-        }
-      }
-    }
-
-    .switch {
-      position: relative;
-      margin: 0;
-      transform: scale(1.5);
-    }
-  }
-
   .body {
     display: flex;
     height: 100%;
+    margin-top: 10px;
   }
+
 }

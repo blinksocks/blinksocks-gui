@@ -9,7 +9,7 @@ import { Icon } from '@blueprintjs/core';
 import NetworkTips from './NetworkTips/NetworkTips';
 import Home from '../Home/Home';
 import Services from '../Services/Services';
-import AddService from "../Services/AddService/AddService";
+import AddServer from '../Services/Add/Add';
 import Github from '../../components/Github/Github';
 
 import styles from './App.module.css';
@@ -95,7 +95,7 @@ export default class App extends React.Component {
         </button>
         <div className={styles.body}>
           <Switch>
-            <Route path={match.url + 'services/add'} component={AddService}/>
+            <Route path={match.url + 'services/add'} component={AddServer}/>
             <Route path={match.url + 'services/:id'} component={Services}/>
             <Route component={Home}/>
           </Switch>

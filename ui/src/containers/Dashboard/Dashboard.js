@@ -36,6 +36,18 @@ export default class Dashboard extends React.Component {
     }
   };
 
+  onRenameService = async (id, remarks) => {
+    if (remarks.length < 1) {
+      return;
+    }
+    try {
+      await call('update_remarks', { id, remarks });
+      await this.fetchServices();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   onRemoveService = async (id) => {
     if (window.confirm('Are you sure to remove this service?')) {
       try {
@@ -56,6 +68,7 @@ export default class Dashboard extends React.Component {
             key={service.id}
             service={service}
             onCopy={() => this.onCopyService(service.id)}
+            onRename={(remarks) => this.onRenameService(service.id, remarks)}
             onRemove={() => this.onRemoveService(service.id)}
           />
         ))}

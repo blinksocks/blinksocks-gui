@@ -1,19 +1,17 @@
-// const os = require('os');
 const winston = require('winston');
 
-module.exports = new (winston.Logger)({
+const { transports, format: { printf, combine, colorize, timestamp, splat, prettyPrint } } = winston;
+
+module.exports = winston.createLogger({
   level: 'silly',
+  format: combine(
+    timestamp(),
+    splat(),
+    colorize(),
+    prettyPrint(),
+    printf((info) => `${info.timestamp} - ${info.level}: ${info.message}`)
+  ),
   transports: [
-    new (winston.transports.Console)({
-      colorize: true,
-      prettyPrint: true
-    }),
-    // new (require('winston-daily-rotate-file'))({
-    //   json: false,
-    //   eol: os.EOL,
-    //   filename: __LOG_PATH__,
-    //   level: __LOG_LEVEL__,
-    //   maxDays: __LOG_MAX_DAYS__
-    // }),
+    new transports.Console(),
   ]
 });

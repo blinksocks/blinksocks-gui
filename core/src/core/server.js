@@ -23,9 +23,8 @@ const ALL_METHODS = Object.assign(
 );
 
 function onConnection(socket, { runType }) {
-  const { handshake } = socket;
-  const { user } = handshake;
-  logger.verbose(`[${handshake.address}] connected`);
+  const { user, address } = socket.handshake;
+  logger.verbose(`[${address}] connected`);
 
   function extendDB(db) {
     db.getConfigs = () => {
@@ -41,8 +40,7 @@ function onConnection(socket, { runType }) {
   const thisArg = {
     ctx: {
       runType,
-      // push_handlers is used for _xxx_server_push().
-      push_handlers: {},
+      push_handlers: {}, // used by _xxx_server_push().
     },
     user: user || null,
     db: extendDB(db),
@@ -54,7 +52,7 @@ function onConnection(socket, { runType }) {
       return user['disallowed_methods'] || [];
     },
     push(event, data) {
-      logger.info(`[${handshake.address}] [PUSH] ${JSON.stringify(data)}`);
+      logger.info(`[${address}] [PUSH] ${JSON.stringify(data)}`);
       socket.emit(event, data);
     },
     invoke(method, args, extra) {
@@ -65,7 +63,7 @@ function onConnection(socket, { runType }) {
   // handle client requests
   socket.on('request', async function (req, send) {
     const reqStr = JSON.stringify(req);
-    logger.info(`[${handshake.address}] request => ${reqStr}`);
+    logger.info(`[${address}] request => ${reqStr}`);
     const { method, args } = req;
     try {
       const result = await Router.dispatch.call(thisArg, method, args);
@@ -73,16 +71,16 @@ function onConnection(socket, { runType }) {
       if (result !== null) {
         response.data = result;
       }
-      logger.info(`[${handshake.address}] response => ${JSON.stringify(response)}`);
+      logger.info(`[${address}] response => ${JSON.stringify(response)}`);
       send(response);
     } catch (err) {
-      logger.error(`[${handshake.address}] cannot process the request: ${reqStr}`, err);
+      logger.error(`[${address}] cannot process the request: ${reqStr}, %s`, err.stack);
       send({ code: -1, message: err.message });
     }
   });
 
   socket.on('disconnect', async function () {
-    logger.verbose(`[${handshake.address}] disconnected`);
+    logger.verbose(`[${address}] disconnected`);
     try {
       const { push_handlers } = thisArg.ctx;
       for (const key of Object.keys(push_handlers)) {

@@ -38,7 +38,7 @@
     "prompts": "^0.1.8",
     "socket.io": "^2.1.0",
     "sudo-prompt": "^8.2.0",
-    "winston": "^2.4.1"
+    "winston": "^3.0.0-rc3"
   },
   "devDependencies": {
     "cross-env": "^5.1.4",

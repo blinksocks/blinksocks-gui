@@ -134,8 +134,9 @@ module.exports = async function startServer(args) {
     ctx.status = 200;
   });
 
-  app.use(favicon(path.join(__dirname, '../../public/favicon.ico')));
-  app.use(staticCache(path.join(__dirname, '../../public'), {
+  const publicPath = path.join(__dirname, '../../public');
+  app.use(favicon(path.join(publicPath, 'favicon.ico')));
+  app.use(staticCache(publicPath, {
     alias: {
       '/': '/index.html',
       '/landing': '/index.html',

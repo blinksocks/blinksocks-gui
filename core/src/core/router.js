@@ -13,10 +13,8 @@ async function dispatch(method, args, extra) {
     const result = await func.call(this, args || {}, extra || {});
     if (typeof result === 'undefined') {
       return null;
-    } else if (result instanceof Promise) {
-      return await result;
     } else {
-      return result;
+      return await result;
     }
   } else {
     throw Error(`method "${method}" is not implemented or not registered`);

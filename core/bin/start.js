@@ -59,7 +59,9 @@ async function main() {
   }
 
   if (hasOption('-v') || hasOption('--version')) {
-    return console.log(version);
+    console.log('blinksocks: v' + require('blinksocks/package.json').version);
+    console.log('blinksocks-gui: v' + version);
+    return;
   }
 
   let runType, port;

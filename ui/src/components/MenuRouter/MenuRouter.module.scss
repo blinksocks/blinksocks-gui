@@ -1,0 +1,36 @@
+.container {
+  list-style: none;
+  padding: 0;
+  margin: 0 40px 0 0;
+
+  a:hover {
+    text-decoration: none;
+  }
+
+  li {
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #999;
+
+    &:hover {
+      color: #676767;
+    }
+
+    &.active {
+      color: #0069ff;
+    }
+
+    &.disabled {
+      color: #c4c4c4;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
+  }
+
+  .divider {
+    border-bottom: 1px solid #ececec;
+    margin: 20px 0;
+    cursor: default;
+  }
+}

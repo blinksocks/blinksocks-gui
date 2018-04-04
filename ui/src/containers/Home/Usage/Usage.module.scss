@@ -1,0 +1,21 @@
+.container {
+  margin: 20px 0;
+
+  .item {
+    margin-bottom: 10px;
+
+    h4 {
+      margin-bottom: 5px;
+
+      small {
+        margin-left: 5px;
+        color: #6f6f6f;
+      }
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+}

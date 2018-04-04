@@ -1,0 +1,33 @@
+.container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f7f7f7;
+  padding-top: 20%;
+
+  h1 {
+    margin-bottom: 40px;
+    color: #989898;
+    font-size: 6rem;
+  }
+
+  p {
+    color: #969696;
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  button {
+    border: 0;
+    padding: 10px;
+    width: 100px;
+    background-color: #2e2e2e;
+    color: #fff;
+    cursor: pointer;
+  }
+}

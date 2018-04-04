@@ -1,0 +1,6 @@
+[submodule "core/vendor/pac-cmd"]
+	path = core/vendor/pac-cmd
+	url = https://github.com/getlantern/pac-cmd
+[submodule "core/vendor/sysproxy-cmd"]
+	path = core/vendor/sysproxy-cmd
+	url = https://github.com/getlantern/sysproxy-cmd

@@ -1,0 +1,23 @@
+.container {
+
+  .password {
+    margin-bottom: 10px;
+  }
+
+  .methods {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 0;
+    max-height: 180px;
+    overflow-y: auto;
+
+    > label {
+      width: 200px;
+      margin-right: 20px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 13px;
+    }
+  }
+
+}

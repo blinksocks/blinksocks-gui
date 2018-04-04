@@ -1,0 +1,40 @@
+.container {
+  width: 100%;
+
+  section {
+    display: block;
+    margin-bottom: 30px;
+
+    h3 {
+      padding: 0 10px;
+      margin-bottom: 10px;
+      border-left: 3px solid #4390ff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    table {
+      display: block;
+      width: 100%;
+      padding-top: 5px;
+      border-top: 1px solid #f1f1f1;
+      overflow: auto;
+
+      tbody tr {
+        padding-bottom: 5px;
+        font-size: 16px;
+
+        td {
+          vertical-align: top;
+
+          b {
+            display: inline-block;
+            width: 150px;
+          }
+        }
+      }
+    }
+  }
+
+}

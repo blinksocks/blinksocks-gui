@@ -1,0 +1,42 @@
+.container {
+  width: 100%;
+
+  h3 {
+    padding: 0 10px;
+    margin-bottom: 10px;
+    border-left: 3px solid #4390ff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .table {
+    width: 100%;
+    margin-bottom: 20px;
+
+    tbody {
+      tr td:first-child {
+        width: 80px;
+        vertical-align: middle;
+      }
+
+      tr td:last-child {
+        vertical-align: middle;
+        text-align: center;
+      }
+
+      tr td svg {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .buttons {
+    display: flex;
+
+    & > button {
+      margin-right: 10px;
+    }
+  }
+
+}

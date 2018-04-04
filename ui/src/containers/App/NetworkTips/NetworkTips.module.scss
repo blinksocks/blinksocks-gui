@@ -1,0 +1,21 @@
+.container {
+  position: fixed;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+
+  .content {
+    height: 30px;
+    padding: 0 10px;
+    border-radius: 0 0 2px 2px;
+    text-align: center;
+    line-height: 30px;
+    color: #fff;
+
+    svg {
+      position: relative;
+      top: 7px;
+    }
+  }
+}

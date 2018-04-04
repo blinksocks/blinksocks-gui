@@ -1,0 +1,23 @@
+.container {
+  margin-bottom: 20px;
+
+  .warning {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &:before {
+      margin-top: 5px;
+    }
+  }
+
+  .body {
+    & > section {
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 2px solid #f3f3f3;
+      border-radius: 4px;
+    }
+  }
+
+}

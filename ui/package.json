@@ -1,0 +1,77 @@
+{
+  "name": "blinksocks-gui",
+  "version": "0.1.0",
+  "description": "A web based GUI wrapper for blinksocks",
+  "author": "Micooz",
+  "homepage": "/",
+  "scripts": {
+    "build-css": "node-sass-chokidar src/ -o src/",
+    "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
+    "start-js": "react-app-rewired start",
+    "start": "npm-run-all -p watch-css start-js",
+    "build-js": "react-app-rewired build",
+    "build": "npm-run-all build-css build-js",
+    "postbuild": "node scripts/post-build.js",
+    "test": "react-app-rewired test --env=jsdom",
+    "eject": "react-app-rewired eject"
+  },
+  "dependencies": {
+    "@blueprintjs/core": "^2.0.1",
+    "classnames": "^2.2.5",
+    "echarts": "^4.0.4",
+    "filesize": "^3.6.1",
+    "i18next": "^10.6.0",
+    "i18next-browser-languagedetector": "^2.1.1",
+    "i18next-xhr-backend": "^1.5.1",
+    "jssha": "^2.3.1",
+    "lodash": "^4.17.5",
+    "mobx": "^4.1.1",
+    "mobx-react": "^5.0.0",
+    "normalize.css": "^8.0.0",
+    "nprogress": "^0.2.0",
+    "prop-types": "^15.6.1",
+    "qs": "^6.5.1",
+    "react": "^16.3.0",
+    "react-beautiful-dnd": "^6.0.1",
+    "react-dom": "^16.3.0",
+    "react-ga": "^2.4.1",
+    "react-i18next": "^7.5.1",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "2.0.0-next.9754a231",
+    "react-transition-group": "^2.3.0",
+    "socket.io-client": "^2.1.0",
+    "url-parse": "^1.2.0"
+  },
+  "devDependencies": {
+    "fs-extra": "^5.0.0",
+    "node-sass-chokidar": "^1.2.2",
+    "npm-run-all": "^4.1.2",
+    "react-app-rewire-hot-loader": "^1.0.1",
+    "react-app-rewire-mobx": "^1.0.8",
+    "react-app-rewired": "^1.5.0",
+    "react-hot-loader": "^4.0.0"
+  },
+  "browserslist": {
+    "development": [
+      "last 2 chrome versions",
+      "last 2 firefox versions",
+      "last 2 edge versions"
+    ],
+    "production": [
+      ">1%",
+      "last 4 versions",
+      "Firefox ESR",
+      "not ie < 11"
+    ]
+  },
+  "proxy": {
+    "/verify": {
+      "target": "http://localhost:3000"
+    },
+    "/socket.io": {
+      "target": "http://localhost:3000",
+      "ws": true
+    }
+  },
+  "license": "MIT"
+}

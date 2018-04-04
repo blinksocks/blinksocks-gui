@@ -1,0 +1,28 @@
+@import '~@blueprintjs/core/lib/css/blueprint.css';
+@import '~@blueprintjs/icons/lib/css/blueprint-icons.css';
+
+@font-face {
+  font-family: "Titillium Web";
+  src: url('/fonts/TitilliumWeb-Light.ttf') format("truetype");
+}
+
+body {
+  font-family: "Titillium Web", "Open Sans", "Helvetica Neue", sans-serif;
+  padding: 0;
+  margin: 0;
+  background-color: #fff;
+}
+
+:global {
+
+  .link-reset {
+    color: #fff;
+    text-decoration: none;
+
+    &:hover {
+      color: #fff;
+      text-decoration: none;
+    }
+  }
+
+}

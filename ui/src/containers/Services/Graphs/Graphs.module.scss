@@ -1,0 +1,29 @@
+.container {
+
+  .graphs {
+    display: flex;
+    margin-bottom: 20px;
+
+    .graph {
+      margin: 0 20px 0 0;
+
+      > h3 {
+        text-align: center;
+      }
+
+      .canvas {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 500px;
+        height: 280px;
+        padding: 10px;
+        border: 1px solid #e5e5e5;
+        border-radius: 3px;
+        font-size: 1.2rem;
+        color: #a0a0a0;
+      }
+    }
+  }
+
+}

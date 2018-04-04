@@ -1,0 +1,93 @@
+.container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+
+  .background {
+    position: absolute;
+    left: -20px;
+    right: -20px;
+    top: -20px;
+    bottom: -20px;
+    filter: blur(15px);
+    background: url("/images/landing.jpeg") no-repeat;
+    background-size: 100% 100%;
+    z-index: -1;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: -20%;
+
+    h3 {
+      color: #fff;
+      font-size: 2.5rem;
+      margin-bottom: 40px;
+      text-shadow: #484848 2px 3px 6px;
+    }
+
+    .input {
+      display: flex;
+      align-items: center;
+
+      svg {
+        position: relative;
+        right: -35px;
+        fill: #607d8b;
+      }
+
+      input {
+        outline: none;
+        width: 350px;
+        height: 40px;
+        padding: 10px 10px 10px 40px;
+        margin-right: 10px;
+        border: 1px solid transparent;
+        border-radius: 3px;
+        background-color: #dcdcdc;
+        color: #484848;
+        transition: background-color .1s linear;
+
+        &:focus {
+          background-color: #f4f4f4;
+        }
+
+        &.fail {
+          border: 1px solid #f44336;
+        }
+      }
+
+      button {
+        width: 60px;
+        height: 40px;
+        border: 0;
+        border-radius: 3px;
+        background-color: coral;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color .1s linear;
+
+        &:hover {
+          background-color: #ff8d5f;
+        }
+      }
+    }
+
+    small {
+      color: #f44336;
+      width: 100%;
+      padding: 5px 0 0 30px;
+      font-size: 0.8rem;
+    }
+  }
+}

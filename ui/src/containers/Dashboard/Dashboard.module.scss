@@ -1,0 +1,15 @@
+.container {
+  .left {
+    position: absolute;
+    margin-right: 20px;
+    right: 310px;
+    left: 180px;
+  }
+
+  .right {
+    position: absolute;
+    right: 30px;
+    width: 280px;
+    background-color: #fff;
+  }
+}

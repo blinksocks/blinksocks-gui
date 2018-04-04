@@ -1,0 +1,71 @@
+{
+  "name": "blinksocks-gui",
+  "version": "0.1.0",
+  "description": "A web based GUI wrapper for blinksocks",
+  "author": "Micooz",
+  "files": [
+    "bin",
+    "src",
+    "public"
+  ],
+  "bin": {
+    "blinksocks-gui": "bin/start.js"
+  },
+  "scripts": {
+    "start:client": "cross-env NODE_ENV=development nodemon bin/start.js --client --port 3000",
+    "start:server": "cross-env NODE_ENV=development nodemon bin/start.js --server --port 3000",
+    "debug:client": "cross-env NODE_ENV=development node --inspect --inspect-port=9400 bin/start.js --client --port 3000",
+    "debug:server": "cross-env NODE_ENV=development node --inspect --inspect-port=9401 bin/start.js --server --port 3000",
+    "prepkg": "rimraf pkg/blinksocks-gui-* pkg/sha256sum.txt",
+    "pkg": "pkg --out-path pkg/ --targets node8.9.0-linux-x64,node8.9.0-macos-x64,node8.9.0-win-x64 .",
+    "postpkg": "node pkg/postpkg.js"
+  },
+  "dependencies": {
+    "blinksocks": "^3.1.0",
+    "chalk": "^2.3.2",
+    "date-fns": "^1.29.0",
+    "fs-extra": "^5.0.0",
+    "jssha": "^2.3.1",
+    "koa": "^2.5.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-favicon": "^2.0.1",
+    "koa-router": "^7.4.0",
+    "koa-static-cache": "^5.1.2",
+    "lodash": "^4.17.5",
+    "lodash-id": "^0.14.0",
+    "lowdb": "^1.0.0",
+    "pidusage": "^2.0.6",
+    "prompts": "^0.1.8",
+    "socket.io": "^2.1.0",
+    "sudo-prompt": "^8.2.0",
+    "winston": "^2.4.1"
+  },
+  "devDependencies": {
+    "cross-env": "^5.1.4",
+    "nodemon": "^1.17.3",
+    "pkg": "^4.3.1",
+    "rimraf": "^2.6.2"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "test/*",
+      "docs/*",
+      "vendor/*",
+      "public/*",
+      "runtime/*"
+    ]
+  },
+  "pkg": {
+    "assets": [
+      "public/*",
+      "vendor/pac-cmd/binaries/**/*",
+      "vendor/sysproxy-cmd/binaries/**/*"
+    ],
+    "scripts": [
+      "src/utils/_fork.js",
+      "src/lives/*",
+      "src/methods/*"
+    ]
+  },
+  "license": "MIT"
+}

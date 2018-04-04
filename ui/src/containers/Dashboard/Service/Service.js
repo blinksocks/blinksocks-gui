@@ -7,7 +7,7 @@ import { observer } from 'mobx-react';
 import { Icon, Switch, Popover, Menu, MenuItem, MenuDivider, Position } from '@blueprintjs/core';
 
 import styles from './Service.module.css';
-import { call, toast, store } from '../../../../utils';
+import { call, toast, store } from '../../../utils';
 
 @observer
 export default class Service extends React.Component {

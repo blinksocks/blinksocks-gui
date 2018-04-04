@@ -1,7 +1,11 @@
 .container {
 
-  .subitem {
+  > section {
     margin-bottom: 10px;
+  }
+
+  .advanced {
+    margin: 10px 0;
   }
 
 }

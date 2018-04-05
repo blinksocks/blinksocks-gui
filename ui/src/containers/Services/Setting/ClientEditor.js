@@ -5,7 +5,7 @@ import { TagInput } from '@blueprintjs/core';
 
 import AddressEditor from './AddressEditor/AddressEditor';
 
-import styles from './ClientEditor.module.css';
+import styles from './Editor.module.css';
 
 export default class ClientEditor extends React.Component {
 
@@ -85,16 +85,6 @@ export default class ClientEditor extends React.Component {
             onChange={this.onAddressChange}
           />
         </section>
-        <section>
-          <h5>Log Path</h5>
-          <input
-            type="text"
-            className="pt-input"
-            placeholder="log_path"
-            value={log_path}
-            onChange={this.onLogPathChange}
-          />
-        </section>
         <button
           className={classnames(
             'pt-button pt-fill pt-minimal',
@@ -110,6 +100,17 @@ export default class ClientEditor extends React.Component {
         </button>
         {this._isAdvancedShow && (
           <>
+            <h3>Log</h3>
+            <section>
+              <h5>Log Path</h5>
+              <input
+                type="text"
+                className="pt-input"
+                placeholder="log_path"
+                value={log_path}
+                onChange={this.onLogPathChange}
+              />
+            </section>
             <section>
               <h5>Log Level</h5>
               <div className="pt-select">
@@ -131,16 +132,7 @@ export default class ClientEditor extends React.Component {
                 onChange={this.onLogMaxDaysChange}
               />
             </section>
-            <section>
-              <h5>Timeout</h5>
-              <input
-                type="number"
-                className="pt-input"
-                placeholder="timeout"
-                value={timeout}
-                onChange={this.onTimeoutChange}
-              />
-            </section>
+            <h3>DNS</h3>
             <section>
               <h5>DNS Servers</h5>
               <TagInput
@@ -158,6 +150,17 @@ export default class ClientEditor extends React.Component {
                 min="1"
                 value={dns_expire}
                 onChange={this.onDnsExpireChange}
+              />
+            </section>
+            <h3>Others</h3>
+            <section>
+              <h5>Timeout</h5>
+              <input
+                type="number"
+                className="pt-input"
+                placeholder="timeout"
+                value={timeout}
+                onChange={this.onTimeoutChange}
               />
             </section>
           </>

@@ -8,7 +8,7 @@ import Tooltip from './ToolTip/ToolTip';
 import AddressEditor from './AddressEditor/AddressEditor';
 import ProtocolStackEditor from './ProtocolStatckEditor/ProtocolStackEditor';
 
-import styles from './ServerEditor.module.css';
+import styles from './Editor.module.css';
 
 export default class ServerEditor extends React.Component {
 
@@ -206,75 +206,45 @@ export default class ServerEditor extends React.Component {
     );
   };
 
-  renderMuxConf = () => {
-    const { isClient } = this.props;
+  renderClientSideOnly = () => {
     const { mux, mux_concurrency } = this.state;
     return (
       <>
-        <div className="pt-control-group">
-          <Switch
-            inline
-            className="pt-large"
-            checked={mux}
-            onChange={this.onToggleMux}
-          />
-        </div>
-        {mux && isClient && (
-          <div>
-            <h6>Mux Concurrency</h6>
-            <input
-              type="number"
-              className="pt-input"
-              min="1"
-              placeholder="mux concurrency"
-              value={mux_concurrency}
-              onChange={this.onMuxConcurrencyChange}
+        <h3>MUX</h3>
+        <section>
+          <h5>Multiplexing</h5>
+          <div className="pt-control-group">
+            <Switch
+              inline
+              className="pt-large"
+              checked={mux}
+              onChange={this.onToggleMux}
             />
           </div>
-        )}
+          {mux && (
+            <div>
+              <h6>Mux Concurrency</h6>
+              <input
+                type="number"
+                className="pt-input"
+                min="1"
+                placeholder="mux concurrency"
+                value={mux_concurrency}
+                onChange={this.onMuxConcurrencyChange}
+              />
+            </div>
+          )}
+        </section>
       </>
     );
   };
 
   renderServerSideOnly = () => {
-    const { redirect, acl, acl_conf } = this.state;
+    const { redirect, acl, acl_conf, mux } = this.state;
     const { log_path, log_level, log_max_days, dns, dns_expire, timeout } = this.state;
     return (
       <>
-        <section>
-          <h5>
-            Redirect
-            <Tooltip content="A redirect target when any preset failed. e.g, example.com:80"/>
-          </h5>
-          <input
-            type="text"
-            className="pt-input"
-            placeholder="redirect"
-            value={redirect}
-            onChange={this.onRedirectChange}
-          />
-        </section>
-        <section>
-          <h5>ACL</h5>
-          <Switch
-            inline
-            className="pt-large"
-            checked={acl}
-            onChange={this.onToggleACL}
-          />
-        </section>
-        {acl && (
-          <section>
-            <h5>ACL Config</h5>
-            <input
-              type="text"
-              className="pt-input"
-              placeholder="acl_conf"
-              value={acl_conf}
-              onChange={this.onACLConfChange}
-            />
-          </section>
-        )}
+        <h3>Log</h3>
         <section>
           <h5>Log Path</h5>
           <input
@@ -306,16 +276,7 @@ export default class ServerEditor extends React.Component {
             onChange={this.onLogMaxDaysChange}
           />
         </section>
-        <section>
-          <h5>Timeout</h5>
-          <input
-            type="number"
-            className="pt-input"
-            placeholder="timeout"
-            value={timeout}
-            onChange={this.onTimeoutChange}
-          />
-        </section>
+        <h3>DNS</h3>
         <section>
           <h5>DNS Servers</h5>
           <TagInput
@@ -334,6 +295,63 @@ export default class ServerEditor extends React.Component {
             value={dns_expire}
             onChange={this.onDnsExpireChange}
           />
+        </section>
+        <h3>Access Control</h3>
+        <section>
+          <h5>ACL</h5>
+          <Switch
+            inline
+            className="pt-large"
+            checked={acl}
+            onChange={this.onToggleACL}
+          />
+          {acl && (
+            <section>
+              <h5>ACL Config</h5>
+              <input
+                type="text"
+                className="pt-input"
+                placeholder="acl_conf"
+                value={acl_conf}
+                onChange={this.onACLConfChange}
+              />
+            </section>
+          )}
+        </section>
+        <h3>Others</h3>
+        <section>
+          <h5>Timeout</h5>
+          <input
+            type="number"
+            className="pt-input"
+            placeholder="timeout"
+            value={timeout}
+            onChange={this.onTimeoutChange}
+          />
+        </section>
+        <section>
+          <h5>
+            Redirect
+            <Tooltip content="A redirect target when any preset failed. e.g, example.com:80"/>
+          </h5>
+          <input
+            type="text"
+            className="pt-input"
+            placeholder="redirect"
+            value={redirect}
+            onChange={this.onRedirectChange}
+          />
+        </section>
+        <section>
+          <h5>Multiplexing</h5>
+          <div className="pt-control-group">
+            <Switch
+              inline
+              className="pt-large"
+              checked={mux}
+              onChange={this.onToggleMux}
+            />
+          </div>
         </section>
       </>
     );
@@ -401,11 +419,7 @@ export default class ServerEditor extends React.Component {
         </button>
         {this._isAdvancedShow && (
           <>
-            <section>
-              <h5>Multiplexing</h5>
-              {this.renderMuxConf()}
-            </section>
-            {!isClient && this.renderServerSideOnly()}
+            {isClient ? this.renderClientSideOnly() : this.renderServerSideOnly()}
           </>
         )}
       </div>

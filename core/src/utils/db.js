@@ -10,6 +10,7 @@ const DATABASE_SCHEMA = {
   "client_configs": [],
   "server_configs": [],
   "users": [],
+  "auto_start_services": [],
 };
 
 fsExtra.mkdirpSync(path.dirname(DATABASE_PATH));

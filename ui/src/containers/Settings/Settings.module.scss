@@ -15,18 +15,16 @@
     margin-bottom: 20px;
 
     tbody {
-      tr td:first-child {
-        width: 80px;
+      tr td {
         vertical-align: middle;
-      }
 
-      tr td:last-child {
-        vertical-align: middle;
-        text-align: center;
-      }
+        &:nth-child(3) {
+          text-align: center;
+        }
 
-      tr td svg {
-        cursor: pointer;
+        svg {
+          cursor: pointer;
+        }
       }
     }
   }

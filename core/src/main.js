@@ -4,8 +4,10 @@ const utils = require('util');
 const path = require('path');
 const fsExtra = require('fs-extra');
 const bsInit = require('blinksocks/bin/init');
+const { Config } = require('blinksocks');
 
 const runServer = require('./core/server');
+const { ServiceManager, logger } = require('./utils');
 
 const {
   RUN_TYPE_CLIENT,
@@ -76,10 +78,12 @@ module.exports = async function main(args) {
     // create runtime directory
     await fsExtra.mkdirp('runtime');
 
+    let configs = null;
+
     // keep at least one config in database
     const { clientJson, serverJson } = bsInit({ isMinimal: false, isDryRun: true });
     if (runType === RUN_TYPE_CLIENT) {
-      const configs = db.get('client_configs');
+      configs = db.get('client_configs');
       if (configs.size().value() < 1) {
         clientJson.remarks = 'Default';
         configs.insert(clientJson).write();
@@ -87,7 +91,7 @@ module.exports = async function main(args) {
       // await extractHelpers();
     }
     if (runType === RUN_TYPE_SERVER) {
-      const configs = db.get('server_configs');
+      configs = db.get('server_configs');
       if (configs.size().value() < 1) {
         serverJson.remarks = 'Default';
         configs.insert(serverJson).write();
@@ -102,6 +106,21 @@ module.exports = async function main(args) {
 
     // start server
     await runServer(args);
+
+    // start services in "auto_start_services"
+    const ids = db.get('auto_start_services').value();
+    for (const id of ids) {
+      const config = configs.find({ id }).value();
+      if (config) {
+        try {
+          Config.test(config);
+          await ServiceManager.start(id, config);
+          logger.info(`auto started service: ${config.remarks}`);
+        } catch (err) {
+          logger.error(`cannot auto start service "${config.remarks}": %s`, err.stack);
+        }
+      }
+    }
 
   } catch (err) {
     console.error(err);

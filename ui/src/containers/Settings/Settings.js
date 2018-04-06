@@ -1,9 +1,10 @@
 import React from 'react';
 import classnames from 'classnames';
-import { Button, Dialog, Icon, EditableText } from '@blueprintjs/core';
+import { Button, Dialog, Icon, EditableText, Tooltip, Position } from '@blueprintjs/core';
+
+import UserItem from './UserItem/UserItem';
 
 import { call, toast } from '../../utils';
-import UserItem from './UserItem/UserItem';
 
 import styles from './Settings.module.css';
 
@@ -11,6 +12,8 @@ export default class Settings extends React.Component {
 
   state = {
     users: [],
+    services: [],
+    autoStartServices: [],
     currentUserName: '',
     currentPassword: '',
     isSaving: false,
@@ -20,6 +23,7 @@ export default class Settings extends React.Component {
 
   componentDidMount() {
     this.fetchUsers();
+    this.fetchServices();
   }
 
   async fetchUsers() {
@@ -30,6 +34,31 @@ export default class Settings extends React.Component {
       console.error(err);
     }
   }
+
+  async fetchServices() {
+    try {
+      const [services, autoStartServices] = await Promise.all([
+        call('get_services'),
+        call('get_auto_start_services'),
+      ]);
+      this.setState({ services, autoStartServices });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  onToggleAutoStart = async (e, id) => {
+    const checked = e.target.checked;
+    try {
+      if (checked) {
+        await call('set_service_auto_start', { id });
+      } else {
+        await call('unset_service_auto_start', { id });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   onUserChange = (_user) => {
     this.setState({
@@ -104,10 +133,40 @@ export default class Settings extends React.Component {
   };
 
   render() {
-    const { users, currentUserName, currentPassword } = this.state;
+    const { users, services, autoStartServices, currentUserName, currentPassword } = this.state;
     const { isSaving, isOpenAddUserDialog, isUserAdding } = this.state;
     return (
       <div className={styles.container}>
+        <h3>Services</h3>
+        <table className={classnames('pt-html-table pt-html-table-bordered', styles.table)}>
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th>Options</th>
+          </tr>
+          </thead>
+          <tbody>
+          {services.map(({ id, remarks }) => (
+            <tr key={id}>
+              <td>{remarks}</td>
+              <td>
+                <label className="pt-control pt-checkbox" style={{ marginBottom: 0 }}>
+                  <input
+                    type="checkbox"
+                    defaultChecked={autoStartServices.includes(id)}
+                    onChange={(e) => this.onToggleAutoStart(e, id)}
+                  />
+                  <span className="pt-control-indicator"/>
+                  Auto Start
+                  <Tooltip content="Auto start after gui process restart" position={Position.RIGHT}>
+                    <Icon icon="help" color='#394B59' iconSize={14} style={{ margin: '1px 0 0 3px' }}/>
+                  </Tooltip>
+                </label>
+              </td>
+            </tr>
+          ))}
+          </tbody>
+        </table>
         <h3>Users</h3>
         <table className={classnames('pt-html-table pt-html-table-bordered', styles.table)}>
           <thead>

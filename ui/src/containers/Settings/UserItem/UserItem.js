@@ -64,7 +64,7 @@ export default class UserItem extends React.Component {
     return (
       <div className={styles.container}>
         <div className={classnames('pt-form-group', styles.password)}>
-          <label className="pt-label" htmlFor="example-form-group-input-b">
+          <label className="pt-label">
             <b>Password</b>
           </label>
           <div className="pt-form-content">
@@ -88,7 +88,7 @@ export default class UserItem extends React.Component {
           </div>
         </div>
         <div className="pt-form-group">
-          <label className="pt-label" htmlFor="example-form-group-input-b">
+          <label className="pt-label">
             <b>Method Access</b>
           </label>
           <div className={classnames('pt-form-content', styles.methods)}>

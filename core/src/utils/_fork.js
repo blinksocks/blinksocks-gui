@@ -158,7 +158,13 @@ const methods = {
       };
     }
   },
-
+  // get connection statuses from hub
+  'getConnStatuses': async function getConnStatuses() {
+    if (hub) {
+      const performance = hub.getPerformance();
+      return performance.getConnStatuses();
+    }
+  },
   // get current process cpu metrics
   'getCPUMetrics': () => Monitor.getCPUMetrics(),
   // get current process memory metrics

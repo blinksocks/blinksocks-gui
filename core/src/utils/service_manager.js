@@ -139,6 +139,14 @@ module.exports = {
     }
   },
 
+  async getServiceConnStatuses(id) {
+    const sub = subprocesses.get(id);
+    if (sub) {
+      return await sub.invoke('getConnStatuses') || [];
+    }
+    return [];
+  },
+
   async getMetrics(id, type) {
     const sub = subprocesses.get(id);
     if (sub) {

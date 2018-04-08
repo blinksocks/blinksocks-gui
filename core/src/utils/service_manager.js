@@ -1,7 +1,9 @@
 const path = require('path');
 const child_process = require('child_process');
+const _ = require('lodash');
 
 const {
+  RUNTIME_PATH,
   SERVICE_STATUS_INIT,
   SERVICE_STATUS_RUNNING,
   SERVICE_STATUS_STOPPED,
@@ -15,7 +17,10 @@ const subprocesses = new Map(
 
 // spawn a new sub process
 function fork() {
-  const subprocess = child_process.fork(FORK_SCRIPT, { silent: true });
+  const subprocess = child_process.fork(FORK_SCRIPT, {
+    cwd: RUNTIME_PATH,
+    silent: process.env.NODE_ENV === 'production',
+  });
   const messageQueue = [];
 
   subprocess.on('message', (message) => {
@@ -86,7 +91,10 @@ module.exports = {
       subprocesses.set(id, sub);
     }
     try {
-      await sub.invoke('start', config);
+      // force logs to put into runtime/logs/
+      const configCopy = _.cloneDeep(config);
+      configCopy.log_path = `logs/${id}.log`;
+      await sub.invoke('start', configCopy);
     } catch (err) {
       subprocesses.delete(id);
       throw err;

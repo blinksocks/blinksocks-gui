@@ -76,7 +76,7 @@ module.exports = async function main(args) {
   const { runType } = args;
   try {
     // create runtime directory
-    await fsExtra.mkdirp('runtime');
+    await fsExtra.mkdirp('runtime/logs');
 
     let configs = null;
 

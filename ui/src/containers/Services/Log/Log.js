@@ -1,15 +1,77 @@
 import React from 'react';
 import _ from 'lodash';
+import { ButtonGroup, Button, Icon } from '@blueprintjs/core';
 import { matchPath } from 'react-router-dom';
 
+import { live } from '../../../utils';
+import { CONN_STAGE_INIT, CONN_STAGE_TRANSFER, CONN_STAGE_FINISH, CONN_STAGE_ERROR } from '../../../constants';
+
 import styles from './Log.module.css';
-import live from '../../../utils/live';
+
+const VIEW_TYPE_PARSED = 0;
+const VIEW_TYPE_RAW = 1;
+
+// helper functions
+
+function search(logs, keywords) {
+  return logs.filter(({ sourceHost, sourcePort, targetHost, targetPort }) =>
+    [sourceHost, sourcePort + '', targetHost, targetPort + ''].some((text) => text.indexOf(keywords) > -1)
+  );
+}
+
+class ConnectionItem extends React.Component {
+
+  render() {
+    const { _showDetails, stage, sourceHost, sourcePort, targetHost, targetPort } = this.props;
+    const { startTime, endTime, elapsed } = this.props;
+    const color = {
+      [CONN_STAGE_INIT]: '#FFC940',
+      [CONN_STAGE_TRANSFER]: '#43BF4D',
+      [CONN_STAGE_FINISH]: '#E1E8ED',
+      [CONN_STAGE_ERROR]: '#DB3737',
+    }[stage];
+    const style = {
+      [CONN_STAGE_FINISH]: { color: '#7c7e81' },
+    }[stage] || [];
+    return (
+      <div className={styles.conn}>
+        <div className={styles.abstract} style={style}>
+          <span><Icon icon={_showDetails ? 'chevron-down' : 'chevron-right'}/></span>
+          <span className={styles.dot} style={{ backgroundColor: color }}/>
+          <span>{sourceHost}:{sourcePort}</span>
+          {targetHost && targetPort && (
+            <>
+              <span> -> </span>
+              <span>{targetHost}:{targetPort}</span>
+            </>
+          )}
+        </div>
+        {_showDetails && (
+          <div className={styles.details}>
+            <span className="pt-tag pt-minimal">
+              <b>Duration: {startTime} - {endTime ? endTime : '?'}</b>
+            </span>
+            {elapsed && (
+              <span className="pt-tag pt-minimal">
+                <b>Elapsed: {(elapsed / 1e3).toFixed(2)}s</b>
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+}
 
 export default class Log extends React.Component {
 
   state = {
+    id: '',
     logs: [],
     searchLogs: [],
+    keywords: '',
+    viewType: VIEW_TYPE_PARSED,
   };
 
   unlive = null;
@@ -17,10 +79,15 @@ export default class Log extends React.Component {
   async componentDidMount() {
     const { params: { id } } = matchPath(this.props.match.url, { path: '/services/:id' });
     try {
-      this.unlive = await live('live_log', { id }, (log) => {
-        const logs = this.state.logs.concat(Array.isArray(log) ? log : [log]);
-        this.setState({ logs, searchLogs: logs });
+      this.unlive = await live('live_connections', { id }, (logs) => {
+        const indexes = _.keyBy(this.state.searchLogs, 'id');
+        const _logs = logs.map((log) => ({
+          ...log,
+          _showDetails: indexes[log.id] ? indexes[log.id]._showDetails : false,
+        }));
+        this.setState({ logs: _logs, searchLogs: search(_logs, this.state.keywords) });
       });
+      this.setState({ id });
     } catch (err) {
       console.error(err);
     }
@@ -33,35 +100,72 @@ export default class Log extends React.Component {
     }
   }
 
+  // ToolBar
+
   onSearch = _.debounce((keywords) => {
     if (keywords === '') {
-      this.setState({ searchLogs: this.state.logs });
+      this.setState({ searchLogs: this.state.logs, keywords });
     } else {
-      this.setState({ searchLogs: this.state.logs.filter((log) => log.indexOf(keywords) > -1) });
+      this.setState({ searchLogs: search(this.state.logs, keywords), keywords });
     }
-  }, 500);
+  }, 300);
 
-  onClear = () => {
-    this.setState({ logs: [], searchLogs: [] });
+  onViewParsed = () => {
+    this.setState({ viewType: VIEW_TYPE_PARSED });
+  };
+
+  onViewRaw = () => {
+    const { id } = this.state;
+    window.open('/logs/' + id);
+  };
+
+  onToggleConnItem = (index) => {
+    this.setState({
+      searchLogs: this.state.searchLogs.map((log, i) => ({
+        ...log,
+        _showDetails: i === index ? !log._showDetails : log._showDetails,
+      })),
+    });
   };
 
   render() {
-    const { searchLogs } = this.state;
+    const { searchLogs, viewType } = this.state;
     return (
       <div className={styles.container}>
-        <div className="pt-input-group">
-          <span className="pt-icon pt-icon-search"/>
-          <input
-            type="text"
-            className="pt-input"
-            placeholder="Search Log..."
-            onChange={(e) => this.onSearch(e.target.value)}
-          />
+        <div className={styles.header}>
+          <div className="pt-input-group">
+            <span className="pt-icon pt-icon-search"/>
+            <input
+              type="text"
+              className="pt-input"
+              placeholder="Search..."
+              style={{ width: 200 }}
+              onChange={(e) => this.onSearch(e.target.value)}
+            />
+          </div>
+          <div className={styles.tools}>
+            <ButtonGroup style={{ marginRight: 0 }}>
+              <Button icon="eye-open" active={viewType === VIEW_TYPE_PARSED} onClick={this.onViewParsed}>
+                <b>Parsed</b>
+              </Button>
+              <Button icon="application" active={viewType === VIEW_TYPE_RAW} onClick={this.onViewRaw}>
+                <b>Raw</b>
+              </Button>
+            </ButtonGroup>
+          </div>
         </div>
-        <div className={styles.tools}>
-          <span className="pt-icon pt-icon-eraser" onClick={this.onClear}/>
-        </div>
-        <textarea readOnly="readOnly" value={searchLogs.join('\n')}/>
+        {viewType === VIEW_TYPE_PARSED && (
+          <ul className={styles.body}>
+            {searchLogs.map((conn, i) => (
+              <li key={i} onClick={() => this.onToggleConnItem(i)}>
+                <ConnectionItem {...conn}/>
+              </li>
+            ))}
+            {searchLogs.length < 1 && (
+              <li className={styles.empty}>NO DATA</li>
+            )}
+          </ul>
+        )}
       </div>
     );
   }

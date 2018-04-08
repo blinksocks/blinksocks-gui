@@ -1,41 +1,88 @@
 .container {
+  border: 1px solid #d5d8da;
+  border-radius: 3px;
 
-  .tools {
-    position: absolute;
-    right: 40px;
-    margin-top: 15px;
+  .header {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding: 0 10px;
+    border-bottom: 1px solid #ddd;
+    border-radius: 3px 3px 0 0;
+    background-color: #f6f8fa;
 
-    span {
-      cursor: pointer;
-      font-size: 16px;
-      padding: 5px;
-      opacity: .5;
-      transition: opacity .1s linear;
+    .tools {
+      position: absolute;
+      right: 40px;
 
-      &:hover {
-        background-color: #eaeaea;
-        border-radius: 2px;
-        opacity: .85;
+      > span {
+        cursor: pointer;
+        font-size: 16px;
+        padding: 5px;
+        opacity: .5;
+        transition: opacity .1s linear;
+
+        &:hover {
+          background-color: #eaeaea;
+          border-radius: 2px;
+          opacity: .85;
+        }
       }
     }
   }
 
-  textarea {
-    resize: vertical;
-    font-family: "Open Sans", "Helvetica Neue", sans-serif;
-    display: block;
-    overflow: scroll;
-    margin: 10px 0;
-    padding: 15px;
-    border: 0;
-    min-height: 350px;
-    width: 100%;
-    border-radius: 3px;
-    box-shadow: inset 0 0 0 1px rgba(16, 22, 26, 0.15);
-    color: #333;
-    line-height: 1.4;
-    word-break: break-all;
-    word-wrap: break-word;
-    white-space: pre;
+  .body {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      cursor: pointer;
+
+      .conn {
+
+        .abstract {
+
+          span {
+            display: inline-block;
+            margin-right: 5px;
+
+            > svg {
+              margin-top: 1px;
+            }
+          }
+
+          .dot {
+            width: 20px;
+            height: 10px;
+          }
+        }
+
+        .details {
+          margin-left: 48px;
+          margin-top: 5px;
+          font-size: .8rem;
+
+          & > span {
+            margin-right: 5px;
+          }
+        }
+      }
+
+      &.empty {
+        color: #30404d;
+        text-align: center;
+      }
+
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      &:hover {
+        background-color: #f7f7f7;
+      }
+    }
   }
 }

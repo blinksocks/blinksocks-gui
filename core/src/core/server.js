@@ -1,5 +1,7 @@
+const fs = require('fs');
 const path = require('path');
 const http = require('http');
+const utils = require('util');
 const Koa = require('koa');
 const KoaRouter = require('koa-router');
 const staticCache = require('koa-static-cache');
@@ -7,7 +9,10 @@ const favicon = require('koa-favicon');
 const bodyParser = require('koa-bodyparser');
 const _ = require('lodash');
 
+const readdir = utils.promisify(fs.readdir);
+
 const {
+  RUNTIME_LOG_PATH,
   RUN_TYPE_CLIENT,
   RUN_TYPE_SERVER,
   HASH_SALT,
@@ -132,6 +137,24 @@ module.exports = async function startServer(args) {
       return ctx.throw(403, 'authentication error');
     }
     ctx.status = 200;
+  });
+  router.get('/logs/:id', async (ctx) => {
+    const { id } = ctx.params;
+    if (!/[0-9a-z\-]{36}/.test(id)) {
+      return ctx.throw(400, 'invalid parameter');
+    }
+    const files = await readdir(RUNTIME_LOG_PATH);
+    const logFiles = files
+      .filter(name => name.startsWith(id + '.log'))
+      .sort()
+      .map(name => path.join(RUNTIME_LOG_PATH, name));
+
+    const logFile = logFiles[0] || '';
+    if (!logFile) {
+      return ctx.throw(404);
+    }
+    ctx.set('content-type', 'text/plain');
+    ctx.body = fs.createReadStream(logFile);
   });
 
   const publicPath = path.join(__dirname, '../../public');

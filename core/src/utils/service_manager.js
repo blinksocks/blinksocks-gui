@@ -115,12 +115,12 @@ module.exports = {
   async getServices() {
     const services = {};
     for (const [id] of subprocesses) {
-      services[id] = await this.getServiceInfo(id);
+      services[id] = await this.getServiceStatus(id);
     }
     return services;
   },
 
-  async getServiceInfo(id) {
+  async getServiceStatus(id) {
     const sub = subprocesses.get(id);
     if (sub) {
       return {

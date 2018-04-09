@@ -103,10 +103,10 @@ export default class App extends React.Component {
         <footer>
           <ul>
             {FOOTER_LINKS.map(({ text, link }, i) => (
-              <>
-                <li><a href={link} target="_blank" rel="noopener noreferrer">{text}</a></li>
-                {i < FOOTER_LINKS.length - 1 && <li className={styles.divider}/>}
-              </>
+              <li key={i}>
+                <a href={link} target="_blank" rel="noopener noreferrer">{text}</a>
+                {i < FOOTER_LINKS.length - 1 && <span className={styles.divider}/>}
+              </li>
             ))}
           </ul>
         </footer>

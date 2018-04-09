@@ -23,7 +23,7 @@ class ConnectionItem extends React.Component {
 
   render() {
     const { _showDetails, stage, sourceHost, sourcePort, targetHost, targetPort } = this.props;
-    const { startTime, endTime, elapsed } = this.props;
+    const { startTime, endTime, elapsed, message } = this.props;
     const color = {
       [CONN_STAGE_INIT]: '#FFC940',
       [CONN_STAGE_TRANSFER]: '#43BF4D',
@@ -47,13 +47,18 @@ class ConnectionItem extends React.Component {
           )}
         </div>
         {_showDetails && (
-          <div className={styles.details}>
+          <div className={styles.details} onClick={(e) => e.stopPropagation()}>
             <span className="pt-tag pt-minimal">
               <b>Duration: {startTime} - {endTime ? endTime : '?'}</b>
             </span>
             {elapsed && (
               <span className="pt-tag pt-minimal">
                 <b>Elapsed: {(elapsed / 1e3).toFixed(2)}s</b>
+              </span>
+            )}
+            {message && (
+              <span className="pt-tag pt-intent-danger pt-minimal">
+                <b>Error: {message}</b>
               </span>
             )}
           </div>

@@ -96,10 +96,9 @@ const Monitor = {
       _memory_metrics.push([dateStr, memoryUsage]);
 
       if (hub) {
-        const performance = hub.getPerformance();
         const connections = await hub.getConnections();
-        _upload_speed_metrics.push([dateStr, performance.getUploadSpeed()]);
-        _download_speed_metrics.push([dateStr, performance.getDownloadSpeed()]);
+        _upload_speed_metrics.push([dateStr, hub.getUploadSpeed()]);
+        _download_speed_metrics.push([dateStr, hub.getDownloadSpeed()]);
         _connections_metrics.push([dateStr, connections]);
         _upload_traffic_metrics.push([dateStr, hub.getTotalWritten()]);
         _download_traffic_metrics.push([dateStr, hub.getTotalRead()]);
@@ -148,21 +147,17 @@ const methods = {
   // get status from hub
   'getStatus': async function getStatus() {
     if (hub) {
-      const performance = hub.getPerformance();
       return {
         connections: await hub.getConnections(),
-        // total_download_bytes: instance.getTotalRead(),
-        // total_upload_bytes: instance.getTotalWritten(),
-        download_speed: performance.getDownloadSpeed(),
-        upload_speed: performance.getUploadSpeed(),
+        download_speed: hub.getDownloadSpeed(),
+        upload_speed: hub.getUploadSpeed(),
       };
     }
   },
   // get connection statuses from hub
   'getConnStatuses': async function getConnStatuses() {
     if (hub) {
-      const performance = hub.getPerformance();
-      return performance.getConnStatuses();
+      return hub.getConnStatuses();
     }
   },
   // get current process cpu metrics

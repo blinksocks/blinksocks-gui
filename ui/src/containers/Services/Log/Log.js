@@ -1,9 +1,9 @@
 import React from 'react';
 import _ from 'lodash';
-import { ButtonGroup, Button, Icon } from '@blueprintjs/core';
+import { ButtonGroup, Button, Menu, MenuItem, Icon, Popover, Position } from '@blueprintjs/core';
 import { matchPath } from 'react-router-dom';
 
-import { live } from '../../../utils';
+import { live, call } from '../../../utils';
 import { CONN_STAGE_INIT, CONN_STAGE_TRANSFER, CONN_STAGE_FINISH, CONN_STAGE_ERROR } from '../../../constants';
 
 import styles from './Log.module.css';
@@ -72,7 +72,7 @@ class ConnectionItem extends React.Component {
 export default class Log extends React.Component {
 
   state = {
-    id: '',
+    logFiles: [],
     logs: [],
     searchLogs: [],
     keywords: '',
@@ -92,7 +92,8 @@ export default class Log extends React.Component {
         }));
         this.setState({ logs: _logs, searchLogs: search(_logs, this.state.keywords) });
       });
-      this.setState({ id });
+      const logFiles = await call('get_service_logs', { id });
+      this.setState({ logFiles });
     } catch (err) {
       console.error(err);
     }
@@ -119,11 +120,6 @@ export default class Log extends React.Component {
     this.setState({ viewType: VIEW_TYPE_PARSED });
   };
 
-  onViewRaw = () => {
-    const { id } = this.state;
-    window.open('/logs/' + id);
-  };
-
   onToggleConnItem = (index) => {
     this.setState({
       searchLogs: this.state.searchLogs.map((log, i) => ({
@@ -131,6 +127,27 @@ export default class Log extends React.Component {
         _showDetails: i === index ? !log._showDetails : log._showDetails,
       })),
     });
+  };
+
+  renderMenu = () => {
+    const { logFiles } = this.state;
+    const styles = { textDecoration: 'none', color: 'inherit' };
+    const getDate = (file) => {
+      const result = file.match(/\d{4}-\d{2}-\d{2}/);
+      if (result) {
+        return result[0];
+      }
+      return '';
+    };
+    return (
+      <Menu>
+        {logFiles.map((file) => (
+          <a key={file} target="_blank" href={`/logs/${file}`} style={styles}>
+            <MenuItem key={file} text={getDate(file)} icon="import"/>
+          </a>
+        ))}
+      </Menu>
+    );
   };
 
   render() {
@@ -153,9 +170,11 @@ export default class Log extends React.Component {
               <Button icon="eye-open" active={viewType === VIEW_TYPE_PARSED} onClick={this.onViewParsed}>
                 <b>Parsed</b>
               </Button>
-              <Button icon="application" active={viewType === VIEW_TYPE_RAW} onClick={this.onViewRaw}>
-                <b>Raw</b>
-              </Button>
+              <Popover content={this.renderMenu()} position={Position.BOTTOM}>
+                <Button icon="history" active={viewType === VIEW_TYPE_RAW}>
+                  <b>History</b>
+                </Button>
+              </Popover>
             </ButtonGroup>
           </div>
         </div>

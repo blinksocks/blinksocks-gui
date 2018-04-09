@@ -146,6 +146,9 @@ export default class Log extends React.Component {
             <MenuItem key={file} text={getDate(file)} icon="import"/>
           </a>
         ))}
+        {logFiles.length < 1 && (
+          <MenuItem text="NO HISTORY LOGS" disabled/>
+        )}
       </Menu>
     );
   };

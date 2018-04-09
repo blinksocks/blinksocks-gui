@@ -25,22 +25,17 @@ async function onPostVerify(ctx) {
 }
 
 async function onGetLog(ctx) {
-  const { id } = ctx.params;
-  if (!/[0-9a-z\-]{36}/.test(id)) {
+  const { file } = ctx.params;
+  if (!/^[0-9a-z\-]{36}\.log\.\d{4}-\d{2}-\d{2}$/.test(file)) {
     return ctx.throw(400, 'invalid parameter');
   }
   const files = await readdir(RUNTIME_LOG_PATH);
-  const logFiles = files
-    .filter(name => name.startsWith(id + '.log'))
-    .sort()
-    .map(name => path.join(RUNTIME_LOG_PATH, name));
-
-  const logFile = logFiles[0] || '';
-  if (!logFile) {
+  const name = files.find(name => name === file);
+  if (!name) {
     return ctx.throw(404);
   }
   ctx.set('content-type', 'text/plain');
-  ctx.body = fs.createReadStream(logFile);
+  ctx.body = fs.createReadStream(path.join(RUNTIME_LOG_PATH, name));
 }
 
 module.exports = async function startServer(args) {
@@ -56,7 +51,7 @@ module.exports = async function startServer(args) {
 
   // standalone http interfaces
   router.post('/verify', onPostVerify);
-  router.get('/logs/:id', onGetLog);
+  router.get('/logs/:file', onGetLog);
 
   const publicPath = path.join(__dirname, '../../public');
   app.use(favicon(path.join(publicPath, 'favicon.ico')));

@@ -18,7 +18,7 @@ const readdir = utils.promisify(fs.readdir);
 
 async function onPostVerify(ctx) {
   const { token } = ctx.request.body;
-  if (!db.getWrappedUsers().find((user) => user.token === token)) {
+  if (!db.get('users').find({ password: token }).value()) {
     return ctx.throw(403, 'authentication error');
   }
   ctx.status = 200;

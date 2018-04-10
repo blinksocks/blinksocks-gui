@@ -96,7 +96,7 @@ module.exports = function setup(server, args) {
   // ws authentication middleware
   io.use((socket, next) => {
     const { query: { token } } = socket.handshake;
-    const user = db.getWrappedUsers().find((user) => user.token === token);
+    const user = db.get('users').find({ password: token }).value();
     if (user) {
       // NOTE: put user to socket.handshake so that
       // we can access it again in onConnection().

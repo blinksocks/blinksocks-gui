@@ -10,13 +10,14 @@ const runServer = require('./core/server');
 const { ServiceManager, logger } = require('./utils');
 
 const {
+  HASH_SALT,
   RUN_TYPE_CLIENT,
   RUN_TYPE_SERVER,
   RUNTIME_HELPERS_PAC_PATH,
   RUNTIME_HELPERS_SYSPROXY_PATH,
 } = require('./constants');
 
-const { db } = require('./utils');
+const { db, hash } = require('./utils');
 
 const chmod = utils.promisify(fs.chmod);
 
@@ -101,7 +102,11 @@ module.exports = async function main(args) {
     // add a default user if no users set
     const users = db.get('users');
     if (users.value().length < 1) {
-      users.insert({ 'name': 'root', 'password': 'root', 'disallowed_methods': [] }).write();
+      users.insert({
+        'name': 'root',
+        'password': hash('SHA-256', 'root' + HASH_SALT),
+        'disallowed_methods': [],
+      }).write();
     }
 
     // start server

@@ -1,3 +1,6 @@
+const { HASH_SALT } = require('../constants');
+const { hash } = require('../utils');
+
 module.exports = async function add_user({ user }) {
   if (typeof user !== 'object') {
     throw Error('invalid parameter');
@@ -17,7 +20,7 @@ module.exports = async function add_user({ user }) {
 
   this.db.get('users').insert({
     name: name,
-    password: password,
+    password: hash('SHA-256', password + HASH_SALT),
     disallowed_methods: [],
   }).write();
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import uniqBy from 'lodash/uniqBy';
 import { Button, Dialog, Intent, FormGroup, Icon, TagInput } from '@blueprintjs/core';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import styles from './ProtocolStackEditor.module.css';
@@ -108,7 +109,7 @@ export default class ProtocolStackEditor extends React.Component {
   onSelectPreset = (e) => {
     const { defs } = this.props;
     const name = e.target.value;
-    const def = _.cloneDeep(defs[name]);
+    const def = cloneDeep(defs[name]);
     for (const param of def.params) {
       param.value = param.defaultValue;
     }
@@ -215,7 +216,7 @@ export default class ProtocolStackEditor extends React.Component {
             <span>Only <b>one</b> addressing preset is allowed in the list.</span>
           </p>
         )}
-        {(_.uniqBy(presets, 'name').length < presets.length) && (
+        {(uniqBy(presets, 'name').length < presets.length) && (
           <p className="pt-callout pt-icon-info-sign">
             <span>Duplicate presets found, are you sure to do this?</span>
           </p>

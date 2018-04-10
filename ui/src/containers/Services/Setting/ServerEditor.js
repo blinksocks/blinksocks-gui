@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import omit from 'lodash/omit';
+import cloneDeep from 'lodash/cloneDeep';
 import classnames from 'classnames';
 import { Switch, TagInput } from '@blueprintjs/core';
 
@@ -26,7 +27,7 @@ export default class ServerEditor extends React.Component {
 
   static getDerivedStateFromProps({ server }) {
     return {
-      ..._.omit(server, 'key'),
+      ...omit(server, 'key'),
       secretKey: server.key,
     };
   }
@@ -112,7 +113,7 @@ export default class ServerEditor extends React.Component {
   onCopyPreset = (presetIndex) => {
     const { presets } = this.state;
     this.setState({
-      presets: presets.concat([_.cloneDeep(presets[presetIndex])]),
+      presets: presets.concat([cloneDeep(presets[presetIndex])]),
     }, this.onChange);
   };
 

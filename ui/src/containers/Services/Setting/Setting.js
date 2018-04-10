@@ -4,7 +4,9 @@ import { observer } from 'mobx-react';
 import { Prompt, matchPath } from 'react-router-dom';
 import { Button, Intent } from '@blueprintjs/core';
 import classnames from 'classnames';
-import _ from 'lodash';
+import omit from 'lodash/omit';
+import keyBy from 'lodash/keyBy';
+import cloneDeep from 'lodash/cloneDeep';
 
 import ClientEditor from './ClientEditor';
 import ServerEditor from './ServerEditor';
@@ -40,13 +42,13 @@ export default class Setting extends React.Component {
       const isClient = !!config.server;
       let client, server;
       if (isClient) {
-        client = _.omit(config, 'server');
+        client = omit(config, 'server');
         server = config.server;
       } else {
         server = config;
       }
       // mix "._def" in each server.presets
-      const map = _.keyBy(defs, 'name');
+      const map = keyBy(defs, 'name');
       for (const preset of server.presets) {
         preset._def = map[preset.name];
       }
@@ -68,7 +70,7 @@ export default class Setting extends React.Component {
     const { id } = this.state;
     const { isClient, client, server } = this.state;
     // drop "._def" of each server.presets
-    const serverCopy = _.cloneDeep(server);
+    const serverCopy = cloneDeep(server);
     for (const preset of serverCopy.presets) {
       delete preset._def;
     }

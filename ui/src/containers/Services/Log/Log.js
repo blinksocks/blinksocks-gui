@@ -1,5 +1,6 @@
 import React from 'react';
-import _ from 'lodash';
+import debounce from 'lodash/debounce';
+import keyBy from 'lodash/keyBy';
 import { ButtonGroup, Button, Menu, MenuItem, Icon, Popover, Position } from '@blueprintjs/core';
 import { matchPath } from 'react-router-dom';
 
@@ -85,7 +86,7 @@ export default class Log extends React.Component {
     const { params: { id } } = matchPath(this.props.match.url, { path: '/services/:id' });
     try {
       this.unlive = await live('live_connections', { id }, (logs) => {
-        const indexes = _.keyBy(this.state.searchLogs, 'id');
+        const indexes = keyBy(this.state.searchLogs, 'id');
         const _logs = logs.map((log) => ({
           ...log,
           _showDetails: indexes[log.id] ? indexes[log.id]._showDetails : false,
@@ -108,7 +109,7 @@ export default class Log extends React.Component {
 
   // ToolBar
 
-  onSearch = _.debounce((keywords) => {
+  onSearch = debounce((keywords) => {
     if (keywords === '') {
       this.setState({ searchLogs: this.state.logs, keywords });
     } else {

@@ -21,7 +21,7 @@
     "postpkg": "node pkg/postpkg.js"
   },
   "dependencies": {
-    "blinksocks": "^3.1.0",
+    "blinksocks": "^3.1.1",
     "chalk": "^2.3.2",
     "date-fns": "^1.29.0",
     "fs-extra": "^5.0.0",
@@ -38,7 +38,7 @@
     "prompts": "^0.1.8",
     "socket.io": "^2.1.0",
     "sudo-prompt": "^8.2.0",
-    "winston": "^3.0.0-rc3"
+    "winston": "^3.0.0-rc4"
   },
   "devDependencies": {
     "cross-env": "^5.1.4",

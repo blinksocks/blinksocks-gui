@@ -1,16 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import formatSize from 'filesize';
 
 import styles from './Usage.module.css';
-import { live } from '../../../utils';
+import { store, live } from '../../../utils';
 
 export default class Usage extends React.Component {
-
-  static propTypes = {
-    env: PropTypes.object.isRequired,
-  };
 
   state = {
     cpuUsage: null,
@@ -37,7 +32,10 @@ export default class Usage extends React.Component {
   }
 
   render() {
-    const { env } = this.props;
+    const { env } = store;
+    if (!env.os) {
+      return null;
+    }
     const { cpuUsage, memoryUsage } = this.state;
     const totalMemory = env.os.filter(([key]) => key === 'memory')[0][1];
     const cpuPercentage = (cpuUsage > 1 ? 1 : cpuUsage);

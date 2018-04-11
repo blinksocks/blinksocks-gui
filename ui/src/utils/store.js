@@ -3,6 +3,9 @@ import { RPC_STATUS_INIT, SERVICE_STATUS_INIT, SERVICE_STATUS_RUNNING } from '..
 
 const store = observable({
 
+  // global environment variables
+  env: observable.map({}),
+
   // global websocket status
   rpcStatus: RPC_STATUS_INIT,
 

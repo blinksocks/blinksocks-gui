@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import SystemProxy from './SystemProxy/SystemProxy';
 
 import styles from './Plugins.module.css';
-import { call } from '../../utils';
+import { store } from '../../utils';
 import { RUN_TYPE_CLIENT, RUN_TYPE_SERVER } from '../../constants';
 
 export default class Plugins extends React.Component {
@@ -12,28 +12,13 @@ export default class Plugins extends React.Component {
     match: PropTypes.object.isRequired,
   };
 
-  state = {
-    runType: null,
-    platform: null,
-  };
-
-  async componentDidMount() {
-    try {
-      const env = await call('get_env', null, { cache: true });
-      this.setState({
-        runType: env.runType,
-        platform: env.os.find(([key]) => key === 'platform')[1],
-      });
-    } catch (err) {
-      console.error(err.message);
-    }
-  }
-
   render() {
-    const { runType, platform } = this.state;
-    if (runType === null) {
+    const { env } = store;
+    if (typeof env.runType === 'undefined' || !env.os) {
       return null;
     }
+    const runType = env.runType;
+    const platform = env.os.find(([key]) => key === 'platform')[1];
     return (
       <div className={styles.container}>
         <ul className="pt-breadcrumbs">

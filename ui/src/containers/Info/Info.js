@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { call } from '../../utils';
+import { store } from '../../utils';
 
 import styles from './Info.module.css';
 
@@ -19,22 +19,9 @@ const Table = ({ pairs }) => (
 
 export default class Info extends React.Component {
 
-  state = {
-    env: null,
-  };
-
-  async componentDidMount() {
-    try {
-      const env = await call('get_env', null, { cache: true });
-      this.setState({ env });
-    } catch (err) {
-      console.error(err.message);
-    }
-  }
-
   render() {
-    const { env } = this.state;
-    if (!env) {
+    const { env } = store;
+    if (!env.os || !env.node) {
       return null;
     }
     return (

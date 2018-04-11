@@ -25,10 +25,6 @@ export default class App extends React.Component {
     match: PropTypes.object.isRequired,
   };
 
-  state = {
-    env: {},
-  };
-
   async componentDidMount() {
     try {
       const [env, unlive] = await Promise.all([
@@ -37,10 +33,8 @@ export default class App extends React.Component {
           store.services = services;
         }),
       ]);
-
+      store.env = env;
       this.unlive = unlive;
-
-      this.setState({ env });
     } catch (err) {
       console.error(err.message);
     }
@@ -60,7 +54,7 @@ export default class App extends React.Component {
 
   render() {
     const { match } = this.props;
-    const { env } = this.state;
+    const { env } = store;
     const FOOTER_LINKS = [{
       text: 'ChangeLog',
       link: 'https://github.com/blinksocks/blinksocks-gui/blob/master/CHANGELOG.md',
@@ -71,7 +65,7 @@ export default class App extends React.Component {
       text: 'Document',
       link: 'https://github.com/blinksocks/blinksocks-gui',
     }, {
-      text: `blinksocks - v${env.blinksocksVersion}`,
+      text: `blinksocks - v${env.blinksocksVersion || '-'}`,
       link: 'https://github.com/blinksocks/blinksocks',
     }];
     return (

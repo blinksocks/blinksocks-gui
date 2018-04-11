@@ -10,7 +10,7 @@ import Info from '../Info/Info';
 import Settings from '../Settings/Settings';
 
 import { MenuRouter, MenuRouterDivider } from '../../components/MenuRouter';
-import { call, store } from '../../utils';
+import { store } from '../../utils';
 
 import styles from './Home.module.css';
 
@@ -42,28 +42,14 @@ export default class Home extends React.Component {
     match: PropTypes.object.isRequired,
   };
 
-  state = {
-    env: null,
-  };
-
-  async componentDidMount() {
-    try {
-      const env = await call('get_env', null, { cache: true });
-      this.setState({ env });
-    } catch (err) {
-      console.error(err.message);
-    }
-  }
-
   render() {
     const { match } = this.props;
-    const { env } = this.state;
     const routes = createRoutes(match);
     return (
       <div className={styles.container}>
         <MenuRouter routes={routes} style={{ width: 220, 'minWidth': 220 }}>
           <MenuRouterDivider/>
-          {env && <Usage env={env}/>}
+          <Usage/>
           <small>
             <Icon icon="pulse" color="#5b6f7f" iconSize={12} style={{ marginTop: '3px' }}/>&nbsp;
             Latency: {store.rpcLatency}ms

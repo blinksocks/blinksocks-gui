@@ -1,3 +1,4 @@
+const { hash_password } = require('../utils');
 const { DESENSITIZE_PLACEHOLDER } = require('../constants');
 
 module.exports = async function save_user({ user }) {
@@ -36,7 +37,7 @@ module.exports = async function save_user({ user }) {
 
   this.db.get('users').find({ id }).assign({
     name: name,
-    password: password === DESENSITIZE_PLACEHOLDER ? _user.password : password,
+    password: password === DESENSITIZE_PLACEHOLDER ? _user.password : hash_password(password),
     disallowed_methods: methods.filter(({ active }) => !active).map(({ name }) => name),
   }).write();
 };

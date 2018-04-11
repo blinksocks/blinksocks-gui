@@ -1,5 +1,4 @@
-const { HASH_SALT } = require('../constants');
-const { hash } = require('../utils');
+const { hash_password } = require('../utils');
 
 module.exports = async function add_user({ user }) {
   if (typeof user !== 'object') {
@@ -20,7 +19,7 @@ module.exports = async function add_user({ user }) {
 
   this.db.get('users').insert({
     name: name,
-    password: hash('SHA-256', password + HASH_SALT),
+    password: hash_password(password),
     disallowed_methods: [],
   }).write();
 };

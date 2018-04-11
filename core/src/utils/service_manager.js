@@ -2,6 +2,8 @@ const path = require('path');
 const child_process = require('child_process');
 const _ = require('lodash');
 
+const { logger } = require('../utils');
+
 const {
   RUNTIME_PATH,
   SERVICE_STATUS_INIT,
@@ -29,6 +31,9 @@ function fork() {
       return;
     }
     messageQueue.push(message);
+  });
+  subprocess.on('error', (err) => {
+    logger.error(err.stack);
   });
 
   async function send(action) {
@@ -72,7 +77,7 @@ function fork() {
 
   return {
     // return original <ChildProcess>
-    getProcess() {
+    get process() {
       return subprocess;
     },
     // call any methods of forked process
@@ -105,7 +110,7 @@ module.exports = {
     const sub = subprocesses.get(id);
     if (sub) {
       await sub.invoke('stop');
-      sub.getProcess().kill();
+      sub.process.kill();
       subprocesses.set(id, null);
     } else {
       throw Error(`service(${id}) is not found`);

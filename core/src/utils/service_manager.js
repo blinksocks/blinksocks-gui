@@ -38,6 +38,9 @@ function fork() {
 
   async function send(action) {
     return new Promise((resolve, reject) => {
+      if (!subprocess.connected) {
+        return reject(Error('child process is not available'));
+      }
       // send message to sub process immediately
       subprocess.send(action);
 

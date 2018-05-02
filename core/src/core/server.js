@@ -65,12 +65,16 @@ module.exports = async function startServer(args) {
   app.use(router.routes());
   app.use(router.allowedMethods());
 
-  const _port = port || 3000;
-  server.listen(_port, () => {
-    logger.info(`blinksocks gui ${runType === RUN_TYPE_SERVER ? 'server' : 'client'} is running at ${_port}.`);
-    logger.info('You can now open blinksocks-gui in browser:');
-    console.log('');
-    console.log(`  http://localhost:${_port}/`);
-    console.log('');
+  return new Promise((resolve, reject) => {
+    const _port = port || 3000;
+    server.on('error', reject);
+    server.listen(_port, () => {
+      logger.info(`blinksocks gui ${runType === RUN_TYPE_SERVER ? 'server' : 'client'} is running at ${_port}.`);
+      logger.info('You can now open blinksocks-gui in browser:');
+      console.log('');
+      console.log(`  http://localhost:${_port}/`);
+      console.log('');
+      resolve();
+    });
   });
 };

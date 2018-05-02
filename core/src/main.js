@@ -2,6 +2,7 @@ const os = require('os');
 const fs = require('fs');
 const utils = require('util');
 const path = require('path');
+const chalk = require('chalk');
 const fsExtra = require('fs-extra');
 const bsInit = require('blinksocks/bin/init');
 const { Config } = require('blinksocks');
@@ -119,15 +120,16 @@ module.exports = async function main(args) {
         try {
           Config.test(config);
           await ServiceManager.start(id, config);
-          logger.info(`auto started service: ${config.remarks}`);
+          logger.info(`auto started "${config.remarks}" => ${config.service}`);
         } catch (err) {
-          logger.error(`cannot auto start service "${config.remarks}": %s`, err.stack);
+          logger.error(`cannot auto start "${config.remarks}": %s`, err.stack);
         }
       }
     }
 
   } catch (err) {
-    console.error(err);
+    console.error(chalk.red('[main] cannot start gui server:'));
+    console.error(err.stack);
     process.exit(1);
   }
 };

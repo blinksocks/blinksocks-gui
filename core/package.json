@@ -21,17 +21,16 @@
     "postpkg": "node pkg/postpkg.js"
   },
   "dependencies": {
-    "blinksocks": "^3.1.1",
-    "chalk": "^2.3.2",
+    "chalk": "^2.4.1",
     "date-fns": "^1.29.0",
     "fs-extra": "^5.0.0",
     "jssha": "^2.3.1",
-    "koa": "^2.5.0",
+    "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.0",
     "koa-favicon": "^2.0.1",
     "koa-router": "^7.4.0",
     "koa-static-cache": "^5.1.2",
-    "lodash": "^4.17.5",
+    "lodash": "^4.17.10",
     "lodash-id": "^0.14.0",
     "lowdb": "^1.0.0",
     "pidusage": "^2.0.6",
@@ -45,6 +44,9 @@
     "nodemon": "^1.17.3",
     "pkg": "^4.3.1",
     "rimraf": "^2.6.2"
+  },
+  "peerDependencies": {
+    "blinksocks": "^3.2.0"
   },
   "repository": {
     "url": "https://github.com/blinksocks/blinksocks-gui",

@@ -35,10 +35,10 @@ https://gui.blinksocks.org/landing?password=preview
 > Tips: 如果你是在服务端（一般是 Linux）上使用，可以使用官方提供的安装脚本：
 > https://nodejs.org/en/download/package-manager/#installing-node-js-via-package-manager
 
-然后执行下面的命令安装 blinksocks-gui：
+然后执行下面的命令安装 blinksocks 和 blinksocks-gui：
 
 ```
-$ npm install -g blinksocks-gui
+$ npm install -g blinksocks blinksocks-gui
 ```
 
 需要升级时重新执行上面的命令即可。
@@ -110,9 +110,19 @@ $ git submodule update --init
 
 ### 安装依赖
 
+**core 模块安装**
+
 ```
-$ cd core && npm install
-$ cd ui && npm install
+$ cd core
+$ npm install
+$ npm install --no-save blinksocks
+```
+
+**ui 模块安装**
+
+```
+$ cd ui
+$ npm install
 ```
 
 ### 启动调试

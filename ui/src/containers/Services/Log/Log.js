@@ -4,6 +4,7 @@ import keyBy from 'lodash/keyBy';
 import { ButtonGroup, Button, Menu, MenuItem, Icon, Popover, Position } from '@blueprintjs/core';
 import { matchPath } from 'react-router-dom';
 
+import Title from '../../../components/Title/Title';
 import GoogleMap from './GoogleMap/GoogleMap';
 import { live, call } from '../../../utils';
 import { CONN_STAGE_INIT, CONN_STAGE_TRANSFER, CONN_STAGE_FINISH, CONN_STAGE_ERROR } from '../../../constants';
@@ -172,6 +173,7 @@ export default class Log extends React.Component {
     const { searchLogs, searchDisabled, viewType } = this.state;
     return (
       <div className={styles.container}>
+        <Title>Log</Title>
         <div className={styles.header}>
           <div className="pt-input-group">
             <span className="pt-icon pt-icon-search"/>

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import styles from './Plugins.module.css';
 
 import { store } from '../../utils';
+import Title from '../../components/Title/Title';
 
 export default class Plugins extends React.Component {
 
@@ -18,6 +19,7 @@ export default class Plugins extends React.Component {
     }
     return (
       <div className={styles.container}>
+        <Title>Plugins</Title>
         <ul className="pt-breadcrumbs">
           <li><span className="pt-breadcrumbs-collapsed"/></li>
           <li><span className="pt-breadcrumb pt-breadcrumb-current">Plugins</span></li>

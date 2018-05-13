@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { store } from '../../utils';
+import Title from '../../components/Title/Title';
 
 import styles from './Info.module.css';
 
@@ -26,6 +27,7 @@ export default class Info extends React.Component {
     }
     return (
       <div className={styles.container}>
+        <Title>System Info</Title>
         <section>
           <h3>OS</h3>
           {env.os && <Table pairs={env.os}/>}

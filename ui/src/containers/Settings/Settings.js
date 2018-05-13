@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import { Button, Dialog, Icon, EditableText, Tooltip, Position } from '@blueprintjs/core';
 
 import UserItem from './UserItem/UserItem';
+import Title from '../../components/Title/Title';
 
 import { call, toast } from '../../utils';
 
@@ -137,6 +138,7 @@ export default class Settings extends React.Component {
     const { isSaving, isOpenAddUserDialog, isUserAdding } = this.state;
     return (
       <div className={styles.container}>
+        <Title>Settings</Title>
         <h3>Services</h3>
         <table className={classnames('pt-html-table pt-html-table-bordered', styles.table)}>
           <thead>

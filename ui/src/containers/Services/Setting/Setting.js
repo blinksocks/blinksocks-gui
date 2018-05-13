@@ -13,6 +13,7 @@ import ServerEditor from './ServerEditor';
 import styles from './Setting.module.css';
 
 import { call, toast, store } from '../../../utils';
+import Title from '../../../components/Title/Title';
 
 @observer
 export default class Setting extends React.Component {
@@ -176,6 +177,7 @@ export default class Setting extends React.Component {
     const { id, isClient, isUnSaved } = this.state;
     return (
       <div className={styles.container}>
+        <Title>Setting</Title>
         <Prompt when={isUnSaved} message="You have unsaved changes, are you sure to leave?"/>
         {isUnSaved && !store.isServiceRunning(id) && (
           <p className={classnames('pt-callout pt-intent-warning pt-icon-info-sign', styles.warning)}>

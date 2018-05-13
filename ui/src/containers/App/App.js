@@ -10,6 +10,7 @@ import NetworkTips from './NetworkTips/NetworkTips';
 import Home from '../Home/Home';
 import Services from '../Services/Services';
 import AddServer from '../Services/Add/Add';
+import Title from '../../components/Title/Title';
 import Github from '../../components/Github/Github';
 
 import styles from './App.module.css';
@@ -70,6 +71,7 @@ export default class App extends React.Component {
     }];
     return (
       <div className={styles.container}>
+        <Title>Dashboard</Title>
         <Github url="https://github.com/blinksocks/blinksocks-gui"/>
         <NetworkTips/>
         <h1 className={styles.header}>

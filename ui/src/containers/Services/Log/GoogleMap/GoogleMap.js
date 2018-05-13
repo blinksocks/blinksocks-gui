@@ -4,9 +4,8 @@ import { compose, withProps, withStateHandlers } from 'recompose';
 import { withScriptjs, withGoogleMap, GoogleMap, Circle, Polyline, InfoWindow } from 'react-google-maps';
 
 import styles from './GoogleMap.module.scss';
+import { GOOGLE_MAP_API_KEY } from '../../../../constants';
 import { call } from '../../../../utils';
-
-const API_KEY = 'AIzaSyCdm64ihbcSWFtammP9nemcH_v9CqJzWoQ';
 
 const CustomInfoWindow = ({ lat, lon, as, query: ip, country, regionName, city, org, hostname, onClose }) => (
   <InfoWindow
@@ -25,7 +24,7 @@ const CustomInfoWindow = ({ lat, lon, as, query: ip, country, regionName, city, 
 
 const Map = compose(
   withProps({
-    googleMapURL: `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&v=3.exp&libraries=geometry,drawing,places`,
+    googleMapURL: `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAP_API_KEY}&v=3.exp&libraries=geometry,drawing,places`,
     loadingElement: <div style={{ height: '100%' }}/>,
     containerElement: <div style={{ height: '500px' }}/>,
     mapElement: <div style={{ height: '100%' }}/>,
@@ -117,7 +116,7 @@ export default class _GoogleMap extends React.Component {
 
   render() {
     const { ips } = this.state;
-    const self = ips.filter(({ self }) => self)[0] || { lat: 0, lng: 0 };
+    const self = ips.filter(({ self }) => self)[0] || { lat: 0, lon: 0 };
     return (
       <div className={styles.container}>
         <Map

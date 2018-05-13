@@ -1,6 +1,8 @@
 export const RUN_TYPE_CLIENT = 0;
 export const RUN_TYPE_SERVER = 1;
 
+export const APP_NAME = 'blinksocks-gui';
+export const GOOGLE_MAP_API_KEY = 'AIzaSyCdm64ihbcSWFtammP9nemcH_v9CqJzWoQ';
 export const TOKEN_NAME = 'BLINKSOCKS_GUI_TOKEN';
 export const HASH_SALT = 'blinksocks';
 

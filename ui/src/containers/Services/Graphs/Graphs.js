@@ -3,6 +3,7 @@ import { matchPath } from 'react-router-dom';
 import echarts from 'echarts/lib/echarts';
 import formatBytes from 'filesize';
 
+import Title from '../../../components/Title/Title';
 import { call } from '../../../utils';
 
 import styles from './Graphs.module.css';
@@ -351,6 +352,7 @@ export default class Graphs extends React.Component {
     const { cpu_metrics, memory_metrics, speed_metrics, connections_metrics, traffic_metrics } = this.state;
     return (
       <div className={styles.container}>
+        <Title>Graphs</Title>
         <div className={styles.graphs}>
           <section className={styles.graph}>
             <h3>CPU Utilization</h3>

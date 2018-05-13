@@ -56,7 +56,7 @@ $ npm install -g blinksocks blinksocks-gui
 桌面环境双击直接运行，服务器环境从命令行启动：
 
 ```
-$ blinksocks-gui
+$ NODE_ENV=production blinksocks-gui
 ```
 
 根据提示选择启动类型（客户端或者服务端）：

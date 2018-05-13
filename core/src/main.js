@@ -146,7 +146,7 @@ module.exports = async function main(args) {
     }
 
     // get server ip address
-    if (runType === RUN_TYPE_SERVER && process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV === 'production') {
       logger.info('retrieving public ip address of this machine.');
       try {
         const ip = await getPublicIP();

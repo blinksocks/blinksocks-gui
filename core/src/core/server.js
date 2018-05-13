@@ -55,15 +55,15 @@ module.exports = async function startServer(args) {
 
   const publicPath = path.join(__dirname, '../../public');
   app.use(favicon(path.join(publicPath, 'favicon.ico')));
-  app.use(staticCache(publicPath, {
-    alias: {
-      '/': '/index.html',
-      '/landing': '/index.html',
-    },
-  }));
+  app.use(staticCache(publicPath));
   app.use(bodyParser());
   app.use(router.routes());
   app.use(router.allowedMethods());
+  // others are fallback to index.html
+  app.use((ctx) => {
+    ctx.set('content-type', 'text/html');
+    ctx.body = fs.createReadStream(path.join(publicPath, 'index.html'));
+  });
 
   return new Promise((resolve, reject) => {
     const _port = port || 3000;

@@ -1,14 +1,16 @@
 const os = require('os');
 const fs = require('fs');
+const net = require('net');
 const utils = require('util');
 const path = require('path');
 const chalk = require('chalk');
+const http = require('http');
 const fsExtra = require('fs-extra');
 const bsInit = require('blinksocks/bin/init');
 const { Config } = require('blinksocks');
 
 const runServer = require('./core/server');
-const { ServiceManager, logger } = require('./utils');
+const { ServiceManager, logger, GeoIP } = require('./utils');
 
 const {
   RUN_TYPE_CLIENT,
@@ -73,6 +75,22 @@ async function extractHelpers() {
   await chmod(RUNTIME_HELPERS_SYSPROXY_PATH, 0o774);
 }
 
+async function getPublicIP() {
+  return new Promise((resolve, reject) => {
+    http.get('http://api.ipify.org', function (res) {
+      res.on('data', function (ipbuf) {
+        const ip = ipbuf.toString();
+        if (net.isIP(ip)) {
+          resolve(ip);
+        } else {
+          reject(Error('response is not an ip'));
+        }
+      });
+      res.on('error', reject);
+    });
+  });
+}
+
 module.exports = async function main(args) {
   const { runType } = args;
   try {
@@ -124,6 +142,19 @@ module.exports = async function main(args) {
         } catch (err) {
           logger.error(`cannot auto start "${config.remarks}": %s`, err.stack);
         }
+      }
+    }
+
+    // get server ip address
+    if (runType === RUN_TYPE_SERVER && process.env.NODE_ENV !== 'production') {
+      logger.info('retrieving public ip address of this machine.');
+      try {
+        const ip = await getPublicIP();
+        logger.info(`public ip address is: ${ip}`);
+        db.set('runtime.ip', ip).write();
+        GeoIP.put(ip, { self: true });
+      } catch (err) {
+        logger.error('cannot get public ip address of this machine: %s', err.stack);
       }
     }
 

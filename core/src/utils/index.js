@@ -5,4 +5,5 @@ module.exports = {
   import_dir: require('./import_dir'),
   logger: require('./logger'),
   ServiceManager: require('./service_manager'),
+  GeoIP: require('./geoip'),
 };

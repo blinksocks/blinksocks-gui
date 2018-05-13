@@ -2,7 +2,8 @@ const path = require('path');
 const child_process = require('child_process');
 const _ = require('lodash');
 
-const { logger } = require('../utils');
+const logger = require('./logger');
+const GeoIP = require('./geoip');
 
 const {
   RUNTIME_PATH,
@@ -13,16 +14,13 @@ const {
 
 const FORK_SCRIPT = path.resolve(__dirname, '_fork.js');
 
-const subprocesses = new Map(
-  // <id>: <ChildProcess>,
-);
-
-// spawn a new sub process
-function fork() {
+// create a new sub process
+function create() {
   const subprocess = child_process.fork(FORK_SCRIPT, {
     cwd: RUNTIME_PATH,
     silent: process.env.NODE_ENV === 'production',
   });
+  const geoip = Object.create(GeoIP);
   const messageQueue = [];
 
   subprocess.on('message', (message) => {
@@ -79,24 +77,36 @@ function fork() {
   }
 
   return {
+    // GeoIP instance
+    geoip: geoip,
+
     // return original <ChildProcess>
     get process() {
       return subprocess;
     },
+
     // call any methods of forked process
     async invoke(method, args) {
       return send({ type: method, payload: args });
+    },
+
+    // destroy this object
+    destroy() {
+      subprocess.kill();
+      geoip.clear();
     },
   };
 }
 
 module.exports = {
 
+  _subprocesses: new Map(/* <id>: <ChildProcess> */),
+
   async start(id, config) {
-    let sub = subprocesses.get(id);
+    let sub = this._subprocesses.get(id);
     if (!sub) {
-      sub = fork();
-      subprocesses.set(id, sub);
+      sub = create();
+      this._subprocesses.set(id, sub);
     }
     try {
       // force logs to put into runtime/logs/
@@ -104,17 +114,17 @@ module.exports = {
       configCopy.log_path = `logs/${id}.log`;
       await sub.invoke('start', configCopy);
     } catch (err) {
-      subprocesses.delete(id);
+      this._subprocesses.delete(id);
       throw err;
     }
   },
 
   async stop(id) {
-    const sub = subprocesses.get(id);
+    const sub = this._subprocesses.get(id);
     if (sub) {
       await sub.invoke('stop');
-      sub.process.kill();
-      subprocesses.set(id, null);
+      sub.destroy();
+      this._subprocesses.set(id, null);
     } else {
       throw Error(`service(${id}) is not found`);
     }
@@ -122,14 +132,14 @@ module.exports = {
 
   async getServices() {
     const services = {};
-    for (const [id] of subprocesses) {
+    for (const [id] of this._subprocesses) {
       services[id] = await this.getServiceStatus(id);
     }
     return services;
   },
 
   async getServiceStatus(id) {
-    const sub = subprocesses.get(id);
+    const sub = this._subprocesses.get(id);
     if (sub) {
       return {
         status: SERVICE_STATUS_RUNNING,
@@ -148,15 +158,24 @@ module.exports = {
   },
 
   async getServiceConnStatuses(id) {
-    const sub = subprocesses.get(id);
+    const sub = this._subprocesses.get(id);
     if (sub) {
-      return await sub.invoke('getConnStatuses') || [];
+      const conns = await sub.invoke('getConnStatuses') || [];
+      for (const { sourceHost, targetHost } of conns) {
+        if (sourceHost) {
+          sub.geoip.put(sourceHost, { hostname: sourceHost, inbound: true });
+        }
+        if (targetHost) {
+          sub.geoip.put(targetHost, { hostname: targetHost });
+        }
+      }
+      return conns;
     }
     return [];
   },
 
   async getMetrics(id, type) {
-    const sub = subprocesses.get(id);
+    const sub = this._subprocesses.get(id);
     if (sub) {
       switch (type) {
         case 'cpu':
@@ -172,6 +191,15 @@ module.exports = {
         default:
           break;
       }
+    } else {
+      return [];
+    }
+  },
+
+  getServiceGeoIPs(id) {
+    const sub = this._subprocesses.get(id);
+    if (sub) {
+      return [...sub.geoip.getStore().values()];
     } else {
       return [];
     }

@@ -11,6 +11,9 @@ const DATABASE_SCHEMA = {
   "server_configs": [],
   "users": [],
   "auto_start_services": [],
+  "runtime": {
+    "ip": "",
+  },
 };
 
 fsExtra.mkdirpSync(path.dirname(DATABASE_PATH));

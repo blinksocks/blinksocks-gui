@@ -1,0 +1,25 @@
+.container {
+
+  .circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: red;
+  }
+
+  .infoWindow {
+    list-style: none;
+    margin: 0;
+    padding: 5px;
+
+    li {
+      padding: 3px 0;
+
+      b {
+        display: inline-block;
+        width: 65px;
+      }
+    }
+  }
+
+}

@@ -38,13 +38,13 @@ export default class Services extends React.Component {
       text: 'Graphs',
       component: Graphs,
     }, {
-      path: match.url + '/setting',
-      text: 'Setting',
-      component: Setting,
-    }, {
       path: match.url + '/log',
       text: 'Log',
       component: Log,
+    }, {
+      path: match.url + '/setting',
+      text: 'Setting',
+      component: Setting,
     }];
   }
 

@@ -4,19 +4,21 @@ import keyBy from 'lodash/keyBy';
 import { ButtonGroup, Button, Menu, MenuItem, Icon, Popover, Position } from '@blueprintjs/core';
 import { matchPath } from 'react-router-dom';
 
+import GoogleMap from './GoogleMap/GoogleMap';
 import { live, call } from '../../../utils';
 import { CONN_STAGE_INIT, CONN_STAGE_TRANSFER, CONN_STAGE_FINISH, CONN_STAGE_ERROR } from '../../../constants';
 
 import styles from './Log.module.css';
 
 const VIEW_TYPE_PARSED = 0;
-const VIEW_TYPE_RAW = 1;
+const VIEW_TYPE_MAP = 1;
+const VIEW_TYPE_RAW = 2;
 
 // helper functions
 
 function search(logs, keywords) {
   return logs.filter(({ sourceHost, sourcePort, targetHost, targetPort }) =>
-    [sourceHost, sourcePort + '', targetHost, targetPort + ''].some((text) => text.indexOf(keywords) > -1)
+    [sourceHost, sourcePort + '', targetHost, targetPort + ''].some((text) => text && text.indexOf(keywords) > -1)
   );
 }
 
@@ -76,6 +78,7 @@ export default class Log extends React.Component {
     logFiles: [],
     logs: [],
     searchLogs: [],
+    searchDisabled: false,
     keywords: '',
     viewType: VIEW_TYPE_PARSED,
   };
@@ -83,7 +86,7 @@ export default class Log extends React.Component {
   unlive = null;
 
   async componentDidMount() {
-    const { params: { id } } = matchPath(this.props.match.url, { path: '/services/:id' });
+    const id = this.getServiceID();
     try {
       this.unlive = await live('live_connections', { id }, (logs) => {
         const indexes = keyBy(this.state.searchLogs, 'id');
@@ -107,6 +110,11 @@ export default class Log extends React.Component {
     }
   }
 
+  getServiceID() {
+    const { params: { id } } = matchPath(this.props.match.url, { path: '/services/:id' });
+    return id;
+  }
+
   // ToolBar
 
   onSearch = debounce((keywords) => {
@@ -118,7 +126,11 @@ export default class Log extends React.Component {
   }, 300);
 
   onViewParsed = () => {
-    this.setState({ viewType: VIEW_TYPE_PARSED });
+    this.setState({ viewType: VIEW_TYPE_PARSED, searchDisabled: false });
+  };
+
+  onViewMap = () => {
+    this.setState({ viewType: VIEW_TYPE_MAP, searchDisabled: true });
   };
 
   onToggleConnItem = (index) => {
@@ -129,6 +141,8 @@ export default class Log extends React.Component {
       })),
     });
   };
+
+  // renders
 
   renderMenu = () => {
     const { logFiles } = this.state;
@@ -155,7 +169,7 @@ export default class Log extends React.Component {
   };
 
   render() {
-    const { searchLogs, viewType } = this.state;
+    const { searchLogs, searchDisabled, viewType } = this.state;
     return (
       <div className={styles.container}>
         <div className={styles.header}>
@@ -165,6 +179,7 @@ export default class Log extends React.Component {
               type="text"
               className="pt-input"
               placeholder="Search..."
+              disabled={searchDisabled}
               style={{ width: 200 }}
               onChange={(e) => this.onSearch(e.target.value)}
             />
@@ -174,6 +189,9 @@ export default class Log extends React.Component {
               <Button icon="eye-open" active={viewType === VIEW_TYPE_PARSED} onClick={this.onViewParsed}>
                 <b>Parsed</b>
               </Button>
+              <Button icon="map" active={viewType === VIEW_TYPE_MAP} onClick={this.onViewMap}>
+                <b>Map</b>
+              </Button>
               <Popover content={this.renderMenu()} position={Position.BOTTOM}>
                 <Button icon="history" active={viewType === VIEW_TYPE_RAW}>
                   <b>History</b>
@@ -182,18 +200,19 @@ export default class Log extends React.Component {
             </ButtonGroup>
           </div>
         </div>
-        {viewType === VIEW_TYPE_PARSED && (
-          <ul className={styles.body}>
-            {searchLogs.map((conn, i) => (
-              <li key={i} onClick={() => this.onToggleConnItem(i)}>
-                <ConnectionItem {...conn}/>
-              </li>
-            ))}
-            {searchLogs.length < 1 && (
-              <li className={styles.empty}>NO DATA</li>
-            )}
-          </ul>
-        )}
+        <ul className={styles.body} style={{ display: viewType === VIEW_TYPE_PARSED ? 'block' : 'none' }}>
+          {searchLogs.map((conn, i) => (
+            <li key={i} onClick={() => this.onToggleConnItem(i)}>
+              <ConnectionItem {...conn}/>
+            </li>
+          ))}
+          {searchLogs.length < 1 && (
+            <li className={styles.empty}>NO DATA</li>
+          )}
+        </ul>
+        <div style={{ display: viewType === VIEW_TYPE_MAP ? 'block' : 'none' }}>
+          <GoogleMap sid={this.getServiceID()}/>
+        </div>
       </div>
     );
   }

@@ -1,10 +1,10 @@
 {
-  "main.css": "static/css/main.fe60e2f0.css",
-  "main.js": "static/js/main.d6b986a3.js",
-  "static/media/icons-16.eot": "static/media/icons-16.88856a61.eot",
-  "static/media/icons-16.ttf": "static/media/icons-16.24c72f94.ttf",
-  "static/media/icons-16.woff": "static/media/icons-16.dc164f5b.woff",
-  "static/media/icons-20.eot": "static/media/icons-20.c1acfa53.eot",
-  "static/media/icons-20.ttf": "static/media/icons-20.2899c993.ttf",
-  "static/media/icons-20.woff": "static/media/icons-20.28e1d352.woff"
+  "main.css": "/static/css/main.c67f6091.css",
+  "main.js": "/static/js/main.7dcf722e.js",
+  "static/media/icons-16.eot": "/static/media/icons-16.c22f3806.eot",
+  "static/media/icons-16.ttf": "/static/media/icons-16.76957eb0.ttf",
+  "static/media/icons-16.woff": "/static/media/icons-16.d13388be.woff",
+  "static/media/icons-20.eot": "/static/media/icons-20.062208ea.eot",
+  "static/media/icons-20.ttf": "/static/media/icons-20.6d716ba4.ttf",
+  "static/media/icons-20.woff": "/static/media/icons-20.f56d7d34.woff"
 }

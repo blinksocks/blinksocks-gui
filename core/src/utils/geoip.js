@@ -70,14 +70,11 @@ module.exports = {
       this._uniqueKeys.add(arg);
     }
 
-    let hostname, ip;
-
-    if (net.isIP(arg)) {
-      hostname = '';
-      ip = arg;
-    } else {
-      hostname = arg;
-      ip = await lookup(arg);
+    let ip;
+    try {
+      ip = net.isIP(arg) ? arg : await lookup(arg);
+    } catch (err) {
+      return;
     }
 
     // ignore private ip
@@ -98,7 +95,7 @@ module.exports = {
             ips: oldValue.ips.concat([query]),
           };
           if (oldValue.hostname && extra.hostname) {
-            newValue.hostname = oldValue.hostname.concat([extra.hostname]);
+            newValue.hostname = oldValue.hostname.concat(extra.hostname);
           }
           this._store.set(item.key, newValue);
         } else {

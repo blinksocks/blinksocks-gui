@@ -22,7 +22,7 @@ function createRoutes(match) {
     component: Dashboard,
   }, {
     path: match.url + 'plugins',
-    disabled: true,
+    // disabled: true,
     text: 'Plugins',
     component: Plugins,
   }, {

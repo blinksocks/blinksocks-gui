@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Button, RadioGroup, Radio, Intent } from '@blueprintjs/core';
 import styles from './SystemProxy.module.css';
 
@@ -8,6 +9,10 @@ const PAC_TYPE_LOCAL = 0;
 const PAC_TYPE_REMOTE = 1;
 
 export default class SystemProxy extends React.Component {
+
+  static propTypes = {
+    platform: PropTypes.string.isRequired,
+  };
 
   state = {
     pacType: PAC_TYPE_LOCAL,
@@ -64,10 +69,16 @@ export default class SystemProxy extends React.Component {
   };
 
   render() {
+    const { platform } = this.props;
     const { pacType, sysProxy, pac } = this.state;
     return (
       <div className={styles.container}>
         <h3>System Proxy</h3>
+        {platform === 'darwin' && (
+          <p className="pt-callout pt-intent-warning pt-icon-info-sign">
+            <span>This plugin requires <b>root privileges</b> on <b>macOS</b>.</span>
+          </p>
+        )}
         <section>
           <h5>Global HTTP Proxy</h5>
           <div className="pt-control-group">

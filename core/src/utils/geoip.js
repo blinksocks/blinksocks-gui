@@ -52,15 +52,18 @@ function isPrivateIP(ip) {
   );
 }
 
-module.exports = {
+const MAX_QUEUE_SIZE = 500;
 
-  _uniqueKeys: new Set(),
+class GeoIP {
 
-  _store: new Map(/* <ip>: <result> */),
+  constructor() {
+    this._uniqueKeys = new Set();
+    this._store = [];
+  }
 
   // lookup ip address to geo location
   async put(arg, extra = {}) {
-    if (typeof arg !== 'string') {
+    if (typeof arg !== 'string' || !arg) {
       return;
     }
 
@@ -85,50 +88,45 @@ module.exports = {
     try {
       const geoInfo = await getGeoInfo(ip);
       const { lat, lon: lng, query } = geoInfo;
-      if (!this._store.get(ip)) {
-        // merge hostname and ip by the same geo location
-        const item = this.findItemByPosition(lat, lng);
-        if (item) {
-          const oldValue = item.value;
-          const newValue = {
-            ...oldValue,
-            ips: oldValue.ips.concat([query]),
-          };
-          if (oldValue.hostname && extra.hostname) {
-            newValue.hostname = oldValue.hostname.concat(extra.hostname);
-          }
-          this._store.set(item.key, newValue);
-        } else {
-          const obj = _.pick(geoInfo, ['as', 'city', 'country', 'lat', 'org', 'regionName']);
-          obj['ips'] = [query];
-          obj['lng'] = lng;
-          this._store.set(ip, Object.assign({}, obj, extra));
+
+      // merge hostname and ip by the same geo location
+      const item = this._store.find((v) => v.lat === lat && v.lng === lng);
+      if (item) {
+        item.ips.push(query);
+        if (item.ips.length > 20) {
+          item.ips.shift();
         }
-        return;
+        if (item.hostname && extra.hostname) {
+          item.hostname.push(extra.hostname);
+          if (item.hostname.length > 20) {
+            item.hostname.shift();
+          }
+        }
+      } else {
+        const obj = _.pick(geoInfo, ['as', 'city', 'country', 'lat', 'org', 'regionName']);
+        obj['ips'] = [query];
+        obj['lng'] = lng;
+        this._store.push(Object.assign({}, obj, extra));
+        if (this._store.length > MAX_QUEUE_SIZE) {
+          this._store.shift();
+        }
       }
     } catch (err) {
       logger.error(err.message);
+      this._uniqueKeys.delete(arg);
     }
-    this._uniqueKeys.delete(arg);
-  },
+  }
 
   // return all resolved ip and its geo location
   getStore() {
     return this._store;
-  },
+  }
 
   clear() {
     this._uniqueKeys.clear();
-    this._store.clear();
-  },
+    this._store = [];
+  }
 
-  findItemByPosition(lat, lng) {
-    for (const [key, value] of this._store) {
-      if (lat === value.lat && lng === value.lng) {
-        return { key, value };
-      }
-    }
-    return null;
-  },
+}
 
-};
+module.exports = GeoIP;

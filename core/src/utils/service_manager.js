@@ -2,6 +2,7 @@ const path = require('path');
 const child_process = require('child_process');
 const _ = require('lodash');
 
+const db = require('./db');
 const logger = require('./logger');
 const GeoIP = require('./geoip');
 
@@ -20,7 +21,9 @@ function create() {
     cwd: RUNTIME_PATH,
     silent: process.env.NODE_ENV === 'production',
   });
-  const geoip = Object.create(GeoIP);
+  const geoip = new GeoIP();
+  geoip.put(db.get('runtime.ip').value(), { self: true });
+
   const messageQueue = [];
 
   subprocess.on('message', (message) => {
@@ -199,7 +202,7 @@ module.exports = {
   getServiceGeoIPs(id) {
     const sub = this._subprocesses.get(id);
     if (sub) {
-      return [...sub.geoip.getStore().values()];
+      return sub.geoip.getStore();
     } else {
       return [];
     }

@@ -10,7 +10,7 @@ const bsInit = require('blinksocks/bin/init');
 const { Config } = require('blinksocks');
 
 const runServer = require('./core/server');
-const { ServiceManager, logger, GeoIP } = require('./utils');
+const { ServiceManager, logger } = require('./utils');
 
 const {
   RUN_TYPE_CLIENT,
@@ -152,7 +152,6 @@ module.exports = async function main(args) {
         const ip = await getPublicIP();
         logger.info(`public ip address is: ${ip}`);
         db.set('runtime.ip', ip).write();
-        GeoIP.put(ip, { self: true });
       } catch (err) {
         logger.error('cannot get public ip address of this machine: %s', err.stack);
       }

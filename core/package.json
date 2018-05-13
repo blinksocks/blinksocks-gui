@@ -23,7 +23,7 @@
   "dependencies": {
     "chalk": "^2.4.1",
     "date-fns": "^1.29.0",
-    "fs-extra": "^5.0.0",
+    "fs-extra": "^6.0.1",
     "jssha": "^2.3.1",
     "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.0",
@@ -40,13 +40,13 @@
     "winston": "^3.0.0-rc4"
   },
   "devDependencies": {
-    "cross-env": "^5.1.4",
-    "nodemon": "^1.17.3",
+    "cross-env": "^5.1.5",
+    "nodemon": "^1.17.4",
     "pkg": "^4.3.1",
     "rimraf": "^2.6.2"
   },
   "peerDependencies": {
-    "blinksocks": "^3.2.0"
+    "blinksocks": "3.x"
   },
   "repository": {
     "url": "https://github.com/blinksocks/blinksocks-gui",

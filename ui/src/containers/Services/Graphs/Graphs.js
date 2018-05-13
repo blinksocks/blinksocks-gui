@@ -1,6 +1,5 @@
 import React from 'react';
 import { matchPath } from 'react-router-dom';
-import { Button } from '@blueprintjs/core';
 import echarts from 'echarts/lib/echarts';
 import formatBytes from 'filesize';
 
@@ -30,14 +29,22 @@ export default class Graphs extends React.Component {
   };
 
   componentDidMount() {
-    window.setTimeout(this.onRefresh, 200);
+    this.timer = window.setInterval(this.onRefresh, 5e3);
+    this.onRefresh();
+  }
+
+  componentWillUnmount() {
+    window.clearInterval(this.timer);
   }
 
   onRefresh = async () => {
+    if (this.state.loading) {
+      return;
+    }
     const { params: { id } } = matchPath(this.props.match.url, { path: '/services/:id' });
     try {
       this.setState({ loading: true });
-      const metrics = await call('get_service_metrics', { id }, { showProgress: true });
+      const metrics = await call('get_service_metrics', { id });
       this.setState(metrics, () => {
         const { cpu_metrics, memory_metrics, speed_metrics, connections_metrics, traffic_metrics } = this.state;
         this.drawCpuUsageGraph(cpu_metrics);
@@ -341,12 +348,9 @@ export default class Graphs extends React.Component {
   };
 
   render() {
-    const { loading, cpu_metrics, memory_metrics, speed_metrics, connections_metrics, traffic_metrics } = this.state;
+    const { cpu_metrics, memory_metrics, speed_metrics, connections_metrics, traffic_metrics } = this.state;
     return (
       <div className={styles.container}>
-        <Button className="pt-button" icon="refresh" disabled={loading} onClick={this.onRefresh}>
-          Refresh
-        </Button>
         <div className={styles.graphs}>
           <section className={styles.graph}>
             <h3>CPU Utilization</h3>

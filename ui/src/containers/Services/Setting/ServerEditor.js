@@ -70,7 +70,10 @@ export default class ServerEditor extends React.Component {
         mux_concurrency,
       });
     } else {
-      this.props.onChange(this.state);
+      this.props.onChange({
+        ...omit(this.state, 'secretKey'),
+        key: this.state.secretKey,
+      });
     }
   };
 

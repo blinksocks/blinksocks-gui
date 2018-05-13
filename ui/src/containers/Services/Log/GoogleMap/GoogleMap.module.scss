@@ -14,10 +14,24 @@
 
     li {
       padding: 3px 0;
+      max-width: 280px;
+      white-space: nowrap;
 
       b {
         display: inline-block;
         width: 65px;
+        vertical-align: top;
+      }
+
+      pre {
+        display: inline-block;
+        margin: -2px 0 0;
+        padding: 0;
+        box-shadow: none;
+        width: 100%;
+        max-height: 50px;
+        overflow: auto;
+        font-family: inherit;
       }
     }
   }

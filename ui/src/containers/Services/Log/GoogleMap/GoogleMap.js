@@ -7,15 +7,23 @@ import styles from './GoogleMap.module.scss';
 import { GOOGLE_MAP_API_KEY } from '../../../../constants';
 import { call } from '../../../../utils';
 
-const CustomInfoWindow = ({ lat, lon, as, query: ip, country, regionName, city, org, hostname, onClose }) => (
+const CustomInfoWindow = ({ lat, lng, as, ips, country, regionName, city, org, hostname, onClose }) => (
   <InfoWindow
-    position={{ lat: lat, lng: lon }}
+    position={{ lat, lng }}
     onCloseClick={onClose}
   >
     <ul className={styles.infoWindow}>
-      <li><b>IP:</b>{ip}</li>
-      {hostname && <li><b>Host:</b>{hostname || '-'}</li>}
       <li><b>Location:</b>{[...new Set([regionName, city, country])].join(' ')}</li>
+      <li>
+        <b>IP{ips.length > 1 && `(${ips.length})`}:</b>
+        <pre>{ips.join('\n')}</pre>
+      </li>
+      {hostname && (
+        <li>
+          <b>Host{hostname.length > 1 && `(${hostname.length})`}:</b>
+          <pre>{hostname.join('\n') || '-'}</pre>
+        </li>
+      )}
       <li><b>AS:</b>{as || '-'}</li>
       <li><b>Org:</b>{org || '-'}</li>
     </ul>
@@ -51,6 +59,7 @@ const Map = compose(
   withGoogleMap,
 )(({ defaultCenter, ips, infoWindow, onToggleInfoWindow, onCloseInfoWindow }) =>
   <GoogleMap
+    onClick={onCloseInfoWindow}
     defaultZoom={2}
     defaultCenter={defaultCenter}
   >
@@ -59,7 +68,7 @@ const Map = compose(
         key={index}
         onClick={() => onToggleInfoWindow(infoWindow.display, item)}
         options={{
-          center: { lat: item.lat, lng: item.lon },
+          center: { lat: item.lat, lng: item.lng },
           radius: 30000,
           fillColor: item.self ? '#ff0000' : '#0000ff',
           fillOpacity: 0.6,
@@ -73,7 +82,7 @@ const Map = compose(
       <Polyline
         key={index}
         options={{
-          path: [defaultCenter, { lat: item.lat, lng: item.lon }],
+          path: [defaultCenter, { lat: item.lat, lng: item.lng }],
           strokeWeight: 1,
           strokeOpacity: 0.8,
           strokeColor: item.inbound ? '#FFC940' : '#669EFF',
@@ -116,11 +125,11 @@ export default class _GoogleMap extends React.Component {
 
   render() {
     const { ips } = this.state;
-    const self = ips.filter(({ self }) => self)[0] || { lat: 0, lon: 0 };
+    const self = ips.filter(({ self }) => self)[0] || { lat: 0, lng: 0 };
     return (
       <div className={styles.container}>
         <Map
-          defaultCenter={{ lat: self.lat, lng: self.lon }}
+          defaultCenter={{ lat: self.lat, lng: self.lng }}
           ips={ips}
         />
       </div>

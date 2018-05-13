@@ -163,10 +163,10 @@ module.exports = {
       const conns = await sub.invoke('getConnStatuses') || [];
       for (const { sourceHost, targetHost } of conns) {
         if (sourceHost) {
-          sub.geoip.put(sourceHost, { hostname: sourceHost, inbound: true });
+          sub.geoip.put(sourceHost, { hostname: [sourceHost], inbound: true });
         }
         if (targetHost) {
-          sub.geoip.put(targetHost, { hostname: targetHost });
+          sub.geoip.put(targetHost, { hostname: [targetHost] });
         }
       }
       return conns;

@@ -80,15 +80,34 @@ module.exports = {
       ip = await lookup(arg);
     }
 
-    // ignore private ipv4
+    // ignore private ip
     if (isPrivateIP(ip)) {
       return;
     }
 
     try {
       const geoInfo = await getGeoInfo(ip);
+      const { lat, lon: lng, query } = geoInfo;
       if (!this._store.get(ip)) {
-        return this._store.set(ip, Object.assign({}, _.omit(geoInfo, 'status'), extra));
+        // merge hostname and ip by the same geo location
+        const item = this.findItemByPosition(lat, lng);
+        if (item) {
+          const oldValue = item.value;
+          const newValue = {
+            ...oldValue,
+            ips: oldValue.ips.concat([query]),
+          };
+          if (oldValue.hostname && extra.hostname) {
+            newValue.hostname = oldValue.hostname.concat([extra.hostname]);
+          }
+          this._store.set(item.key, newValue);
+        } else {
+          const obj = _.pick(geoInfo, ['as', 'city', 'country', 'lat', 'org', 'regionName']);
+          obj['ips'] = [query];
+          obj['lng'] = lng;
+          this._store.set(ip, Object.assign({}, obj, extra));
+        }
+        return;
       }
     } catch (err) {
       logger.error(err.message);
@@ -104,6 +123,15 @@ module.exports = {
   clear() {
     this._uniqueKeys.clear();
     this._store.clear();
-  }
+  },
+
+  findItemByPosition(lat, lng) {
+    for (const [key, value] of this._store) {
+      if (lat === value.lat && lng === value.lng) {
+        return { key, value };
+      }
+    }
+    return null;
+  },
 
 };

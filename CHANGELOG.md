@@ -1,5 +1,28 @@
 # 更新日志
 
+## 0.3.0 (2018-05-14)
+
+### :rocket: 新功能和改进
+
+- 日志查看器新增地图（基于 Google Map）模式 :sparkles:
+- 将 blinksocks 依赖改为 peerDependency，可以选择使用不同的版本
+- 图表改为自动刷新
+- 选项卡标题增加动态内容
+
+### :bug: Bug 修复:
+
+- 修复子进程（blinksocks）报错退出时主进程（blinksocks-gui）崩溃的问题
+- 修复免安装版本无法再 Windows 平台下使用的问题
+- 修复 server 模式下无法修改密钥的问题
+- 修复无法通过强制刷新进入次级页面的问题
+- 修复日志查看器没有显示目标地址的问题
+
+### 从 0.2.1 更新到 0.3.0
+
+```
+$ npm install -g blinksocks-gui@0.3.0 blinksocks@3.x
+```
+
 ## 0.2.1 (2018-04-11)
 
 ### :bug: Bug 修复:

@@ -1,6 +1,6 @@
 {
   "name": "blinksocks-gui",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "A web based GUI wrapper for blinksocks",
   "author": "Micooz",
   "files": [

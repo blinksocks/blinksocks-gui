@@ -13,6 +13,8 @@
 
 ![](screenshot-1.png)
 
+![](screenshot-2.png)
+
 ## 在线体验（只读模式）
 
 https://gui.blinksocks.org/landing?password=preview

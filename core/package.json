@@ -26,7 +26,7 @@
     "fs-extra": "^6.0.1",
     "jssha": "^2.3.1",
     "koa": "^2.5.1",
-    "koa-bodyparser": "^4.2.0",
+    "koa-bodyparser": "^4.2.1",
     "koa-favicon": "^2.0.1",
     "koa-router": "^7.4.0",
     "koa-static-cache": "^5.1.2",
@@ -35,13 +35,13 @@
     "lowdb": "^1.0.0",
     "pidusage": "^2.0.6",
     "prompts": "^0.1.8",
-    "socket.io": "^2.1.0",
+    "socket.io": "^2.1.1",
     "sudo-prompt": "^8.2.0",
     "winston": "^3.0.0-rc4"
   },
   "devDependencies": {
-    "cross-env": "^5.1.5",
-    "nodemon": "^1.17.4",
+    "cross-env": "^5.1.6",
+    "nodemon": "^1.17.5",
     "pkg": "^4.3.1",
     "rimraf": "^2.6.2"
   },

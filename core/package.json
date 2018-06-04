@@ -76,5 +76,8 @@
       "src/methods/*"
     ]
   },
+  "engines": {
+    "node": "8"
+  },
   "license": "Apache-2.0"
 }

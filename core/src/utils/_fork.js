@@ -1,5 +1,6 @@
 const pidusage = require('pidusage');
 const dateFns = require('date-fns');
+const { Callee } = require('node-ipc-call');
 
 const { Hub } = require('blinksocks');
 
@@ -126,9 +127,10 @@ const Monitor = {
 
 };
 
-// process methods mapping
-const methods = {
+const callee = new Callee();
 
+// process methods mapping
+callee.register({
   // start hub
   'start': async function start(config) {
     if (!hub) {
@@ -170,22 +172,6 @@ const methods = {
   'getConnectionsMetrics': () => Monitor.getConnectionsMetrics(),
   // get current process upload traffic and download traffic
   'getTrafficMetrics': () => [Monitor.getUploadTrafficMetrics(), Monitor.getDownloadTrafficMetrics()],
-
-};
-
-process.on('message', async (action) => {
-  if (typeof action !== 'object') {
-    return;
-  }
-  const { type, payload } = action;
-  const func = methods[type];
-  if (typeof func !== 'function') {
-    return;
-  }
-  try {
-    const result = await func(payload);
-    process.send({ type: type + '/done', payload: result });
-  } catch (err) {
-    process.send({ type: type + '/error', payload: err.message });
-  }
 });
+
+callee.listen();

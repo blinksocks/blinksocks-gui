@@ -1,9 +1,8 @@
 const path = require('path');
-const child_process = require('child_process');
 const _ = require('lodash');
+const { Caller } = require('node-ipc-call');
 
 const db = require('./db');
-const logger = require('./logger');
 const GeoIP = require('./geoip');
 
 const {
@@ -15,92 +14,6 @@ const {
 
 const FORK_SCRIPT = path.resolve(__dirname, '_fork.js');
 
-// create a new sub process
-function create() {
-  const subprocess = child_process.fork(FORK_SCRIPT, {
-    cwd: RUNTIME_PATH,
-    silent: process.env.NODE_ENV === 'production',
-  });
-  const geoip = new GeoIP();
-  geoip.put(db.get('runtime.ip').value(), { self: true });
-
-  const messageQueue = [];
-
-  subprocess.on('message', (message) => {
-    if (typeof message !== 'object') {
-      // drop non-object message
-      return;
-    }
-    messageQueue.push(message);
-  });
-  subprocess.on('error', (err) => {
-    logger.error(err.stack);
-  });
-
-  async function send(action) {
-    return new Promise((resolve, reject) => {
-      if (!subprocess.connected) {
-        return reject(Error('child process is not available'));
-      }
-      // send message to sub process immediately
-      subprocess.send(action);
-
-      function scanQueue() {
-        for (let i = 0; i < messageQueue.length; i++) {
-          const message = messageQueue[i];
-          // find related message from sub process
-          if (message.type.indexOf(action.type) === 0) {
-            const { type, payload } = message;
-            if (type === action.type + '/error') {
-              reject(Error(payload));
-              return i;
-            }
-            if (type === action.type + '/done') {
-              resolve(payload);
-              return i;
-            }
-          }
-        }
-        return -1;
-      }
-
-      // consume messageQueue
-      setImmediate(function consume() {
-        const index = scanQueue();
-        // if not found, continue to consume,
-        if (index < 0) {
-          setImmediate(consume);
-        }
-        // if message found, remove it from queue.
-        else {
-          messageQueue.splice(index, 1);
-        }
-      });
-    });
-  }
-
-  return {
-    // GeoIP instance
-    geoip: geoip,
-
-    // return original <ChildProcess>
-    get process() {
-      return subprocess;
-    },
-
-    // call any methods of forked process
-    async invoke(method, args) {
-      return send({ type: method, payload: args });
-    },
-
-    // destroy this object
-    destroy() {
-      subprocess.kill();
-      geoip.clear();
-    },
-  };
-}
-
 module.exports = {
 
   _subprocesses: new Map(/* <id>: <ChildProcess> */),
@@ -108,7 +21,12 @@ module.exports = {
   async start(id, config) {
     let sub = this._subprocesses.get(id);
     if (!sub) {
-      sub = create();
+      sub = Caller.fork(FORK_SCRIPT, [], {
+        cwd: RUNTIME_PATH,
+        silent: process.env.NODE_ENV === 'production',
+      });
+      sub.geoip = new GeoIP();
+      sub.geoip.put(db.get('runtime.ip').value(), { self: true });
       this._subprocesses.set(id, sub);
     }
     try {
@@ -127,6 +45,7 @@ module.exports = {
     if (sub) {
       await sub.invoke('stop');
       sub.destroy();
+      sub.geoip.clear();
       this._subprocesses.set(id, null);
     } else {
       throw Error(`service(${id}) is not found`);

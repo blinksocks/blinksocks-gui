@@ -5,17 +5,11 @@
 [![license](https://img.shields.io/npm/l/blinksocks-gui.svg)](https://github.com/blinksocks/blinksocks-gui/blob/master/LICENSE)
 [![%e2%9d%a4](https://img.shields.io/badge/made%20with-%e2%9d%a4-ff69b4.svg)](https://github.com/blinksocks/blinksocks-gui)
 
-为 [blinksocks](https://github.com/blinksocks/blinksocks) 封装的 WEB 图形化界面。
+> 为 [blinksocks](https://github.com/blinksocks/blinksocks) 封装的 WEB 图形化界面。
 
 ![](screenshot-0.png)
 
 ![](screenshot-1.png)
-
-![](screenshot-2.png)
-
-## 在线体验（只读模式）
-
-https://gui.blinksocks.org/landing?password=preview
 
 ## 特性
 
@@ -43,17 +37,9 @@ $ npm install -g blinksocks blinksocks-gui
 
 需要升级时重新执行上面的命令即可。
 
-### 使用预编译版本
-
-> 使用预编译版本无需安装 Node.js 和其他依赖软件，但升级时必须重新下载、解压和替换整个软件包。
-
-下载地址：https://github.com/blinksocks/blinksocks-gui/releases
-
 ## 启动
 
 ### 交互式启动
-
-桌面环境双击直接运行，服务器环境从命令行启动：
 
 ```
 $ NODE_ENV=production blinksocks-gui
@@ -86,7 +72,7 @@ info: You can now open blinksocks-gui in browser:
 
 ```
 
-### 命令行启动
+### 一行命令启动
 
 ```
 $ blinksocks-gui --client --port 3000

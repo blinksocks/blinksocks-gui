@@ -1,6 +1,6 @@
 {
   "name": "blinksocks-gui",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A web based GUI wrapper for blinksocks",
   "author": "Micooz",
   "files": [
@@ -33,6 +33,7 @@
     "lodash": "^4.17.10",
     "lodash-id": "^0.14.0",
     "lowdb": "^1.0.0",
+    "node-ipc-call": "0.0.3",
     "pidusage": "^2.0.6",
     "prompts": "^0.1.8",
     "socket.io": "^2.1.1",
@@ -42,7 +43,7 @@
   "devDependencies": {
     "cross-env": "^5.1.6",
     "nodemon": "^1.17.5",
-    "pkg": "^4.3.1",
+    "pkg": "^4.3.4",
     "rimraf": "^2.6.2"
   },
   "peerDependencies": {
